@@ -3,30 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-        h1 {
-            text-align: center;
-            color: #000000;
-        }
-        h2 {
-            color: #000000;
-            margin-top: 20px;
-        }
-        p {
-            margin: 10px 0;
-        }
-        ul {
-            margin: 10px 20px;
-        }
-    </style>
 </head>
 <body>
     <h1>Impact of Rayleigh Fading and AWGN on Digital Communication Systems</h1>
