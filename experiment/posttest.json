@@ -2,38 +2,174 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "In a Rayleigh fading channel, what is the primary reason for the variation in the received signal's amplitude?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "The transmitter's power is inconsistent.",
+        "b": "Multipath propagation leading to constructive and destructive interference.",
+        "c": "The receiver's antenna is malfunctioning.",
+        "d": "The message signal is inherently unstable."
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "The transmitter's power typically remains consistent; variations arise from the channel.",
+        "b": "Correct! Multipath propagation causes constructive and destructive interference in Rayleigh fading.",
+        "c": "A malfunctioning antenna does not account for the inherent characteristics of Rayleigh fading.",
+        "d": "The stability of the message signal is not related to the channel variations."
       },
-      "correctAnswer": "a",
-      "difficulty": "beginner"
+      "correctAnswer": "b",
+      "difficulty": "hard"
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "Which parameter is most crucial when analyzing the performance of a communication system under AWGN?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "The bandwidth of the communication channel.",
+        "b": "The modulation scheme used.",
+        "c": "The signal-to-noise ratio (SNR).",
+        "d": "The type of coding applied."
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "While bandwidth is important, SNR directly influences performance under AWGN.",
+        "b": "The modulation scheme does affect performance but is secondary to SNR in this context.",
+        "c": "Correct! The signal-to-noise ratio (SNR) is crucial in determining system performance in AWGN.",
+        "d": "Coding techniques are helpful but depend on SNR for effective performance."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is the effect of increasing the transmission power in a Rayleigh fading environment?",
+      "answers": {
+        "a": "It has no effect on the received signal.",
+        "b": "It reduces the effects of fading but does not eliminate them.",
+        "c": "It guarantees perfect signal reception.",
+        "d": "It increases the likelihood of interference."
+      },
+      "explanations": {
+        "a": "Increasing power will have an effect; it won't eliminate fading, however.",
+        "b": "Correct! Increasing transmission power helps mitigate fading effects but cannot fully eliminate them.",
+        "c": "There is no guarantee of perfect reception due to the nature of fading.",
+        "d": "Increasing power can indeed increase interference, depending on the environment."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "How does the presence of multipath components in a Rayleigh fading channel influence the modulation scheme selection?",
+      "answers": {
+        "a": "It favors modulation schemes that are more resilient to phase shifts.",
+        "b": "It necessitates the use of higher frequency modulation schemes.",
+        "c": "It has no impact on the choice of modulation schemes.",
+        "d": "It requires simpler modulation techniques only."
+      },
+      "explanations": {
+        "a": "Correct! Modulation schemes that handle phase shifts well, like QPSK, are preferred in multipath scenarios.",
+        "b": "Higher frequencies may introduce more fading effects, complicating modulation choices.",
+        "c": "Multipath components significantly impact modulation scheme performance.",
+        "d": "Simpler techniques may be inadequate in a multipath environment."
+      },
+      "correctAnswer": "a",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which technique is often used to combat the effects of AWGN in digital communication systems?",
+      "answers": {
+        "a": "Increased bandwidth.",
+        "b": "Adaptive equalization.",
+        "c": "Higher modulation orders.",
+        "d": "Error correction coding."
+      },
+      "explanations": {
+        "a": "While increasing bandwidth can improve capacity, it doesn't combat noise directly.",
+        "b": "Adaptive equalization primarily addresses fading effects, not noise.",
+        "c": "Higher modulation orders increase the likelihood of errors in the presence of noise.",
+        "d": "Correct! Error correction coding helps recover the original message by mitigating the impact of AWGN."
+      },
+      "correctAnswer": "d",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What statistical model is often used to describe the behavior of signals in a Rayleigh fading channel?",
+      "answers": {
+        "a": "Normal distribution.",
+        "b": "Uniform distribution.",
+        "c": "Rayleigh distribution.",
+        "d": "Exponential distribution."
+      },
+      "explanations": {
+        "a": "Normal distribution does not accurately describe Rayleigh fading effects.",
+        "b": "Uniform distribution does not capture the characteristics of fading.",
+        "c": "Correct! Rayleigh distribution models the amplitude of signals in a Rayleigh fading channel.",
+        "d": "Exponential distribution does not apply in this context."
+      },
+      "correctAnswer": "c",
+      "difficulty": "hard"
+    },
+    {
+      "question": "In the context of AWGN, which factor directly influences the Bit Error Rate (BER)?",
+      "answers": {
+        "a": "The distance between transmitter and receiver.",
+        "b": "The modulation technique employed.",
+        "c": "The encoding scheme used.",
+        "d": "All of the above."
+      },
+      "explanations": {
+        "a": "Distance can impact signal strength but is not a direct factor for BER with respect to AWGN.",
+        "b": "Correct! The modulation technique significantly affects BER under AWGN conditions.",
+        "c": "Encoding schemes can influence BER but not solely; they must work with modulation.",
+        "d": "While all these factors are important, the modulation technique is the most direct influence on BER under AWGN."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "What is the significance of the Doppler shift in a Rayleigh fading environment?",
+      "answers": {
+        "a": "It stabilizes the received signal.",
+        "b": "It introduces frequency variations due to relative motion.",
+        "c": "It guarantees error-free communication.",
+        "d": "It simplifies the channel equalization process."
+      },
+      "explanations": {
+        "a": "Doppler shift does not stabilize; it introduces variability.",
+        "b": "Correct! Doppler shift causes frequency variations due to the relative motion between transmitter and receiver.",
+        "c": "Doppler shift does not ensure error-free communication.",
+        "d": "Doppler effects can complicate equalization, rather than simplify it."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "In practical systems, what is the typical approach to enhance performance in the presence of Rayleigh fading?",
+      "answers": {
+        "a": "Using single-input single-output (SISO) systems.",
+        "b": "Implementing diversity techniques.",
+        "c": "Opting for lower bandwidth channels.",
+        "d": "Exclusively using analog signals."
+      },
+      "explanations": {
+        "a": "SISO systems are more susceptible to fading; they do not enhance performance.",
+        "b": "Correct! Diversity techniques, like spatial diversity or frequency diversity, enhance performance in fading environments.",
+        "c": "Lower bandwidth does not inherently enhance performance against fading.",
+        "d": "Analog signals do not provide the necessary resilience against fading."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which of the following statements about the effects of AWGN and Rayleigh fading is true?",
+      "answers": {
+        "a": "AWGN only affects the amplitude of the signal.",
+        "b": "Rayleigh fading can be completely mitigated with appropriate modulation.",
+        "c": "AWGN is predictable, while Rayleigh fading is inherently random.",
+        "d": "Both AWGN and Rayleigh fading have no impact on communication system design."
+      },
+      "explanations": {
+        "a": "AWGN affects both amplitude and signal integrity.",
+        "b": "Rayleigh fading cannot be completely mitigated; it requires techniques to manage.",
+        "c": "Correct! AWGN is predictable, whereas Rayleigh fading involves random variations.",
+        "d": "Both factors are crucial in communication system design, impacting performance and reliability."
+      },
+      "correctAnswer": "c",
+      "difficulty": "hard"
     }
   ]
 }
