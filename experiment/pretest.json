@@ -2,38 +2,174 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "How does Rayleigh fading affect the amplitude of the received message signal?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "It causes the amplitude to remain constant.",
+        "b": "It introduces variations and fluctuations in amplitude.",
+        "c": "It amplifies the message signal.",
+        "d": "It reduces the frequency of the message signal."
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Rayleigh fading does not keep the amplitude constant; it varies it.",
+        "b": "Correct! Rayleigh fading introduces variations in amplitude due to multipath propagation.",
+        "c": "Rayleigh fading does not amplify the signal; it can weaken it.",
+        "d": "Rayleigh fading affects amplitude, not frequency."
       },
-      "correctAnswer": "a",
-      "difficulty": "beginner"
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "What is one major consequence of AWGN on the received message signal?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "It enhances the clarity of the message.",
+        "b": "It introduces additional randomness to the signal.",
+        "c": "It eliminates all forms of distortion.",
+        "d": "It increases the signal-to-noise ratio."
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "AWGN does not enhance clarity; it adds noise.",
+        "b": "Correct! AWGN adds randomness, affecting the integrity of the signal.",
+        "c": "AWGN does not eliminate distortion; it contributes to it.",
+        "d": "AWGN typically reduces the signal-to-noise ratio."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Which of the following best describes the impact of Rayleigh fading on communication channels?",
+      "answers": {
+        "a": "It stabilizes the signal during transmission.",
+        "b": "It leads to constructive and destructive interference.",
+        "c": "It improves the signal quality.",
+        "d": "It guarantees a constant received signal strength."
+      },
+      "explanations": {
+        "a": "Rayleigh fading does not stabilize the signal; it causes variability.",
+        "b": "Correct! Rayleigh fading results in both constructive and destructive interference due to multipath propagation.",
+        "c": "Rayleigh fading typically degrades signal quality, rather than improves it.",
+        "d": "Rayleigh fading does not guarantee constant signal strength; it causes fluctuations."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "How does the presence of AWGN influence the recovery of the original message signal?",
+      "answers": {
+        "a": "It facilitates the recovery process.",
+        "b": "It has no impact on the recovery process.",
+        "c": "It complicates the recovery due to added noise.",
+        "d": "It guarantees accurate recovery of the signal."
+      },
+      "explanations": {
+        "a": "AWGN does not facilitate recovery; it complicates it.",
+        "b": "AWGN definitely impacts the recovery process.",
+        "c": "Correct! AWGN complicates recovery because it adds noise to the received signal.",
+        "d": "AWGN does not guarantee accurate recovery; it often reduces it."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What effect does Rayleigh fading have on the signal-to-noise ratio (SNR)?",
+      "answers": {
+        "a": "It increases the SNR.",
+        "b": "It decreases the SNR.",
+        "c": "It has no effect on SNR.",
+        "d": "It stabilizes the SNR."
+      },
+      "explanations": {
+        "a": "Rayleigh fading does not increase SNR; it typically decreases it.",
+        "b": "Correct! Rayleigh fading often leads to a decrease in the SNR due to multipath effects.",
+        "c": "Rayleigh fading does affect SNR, usually negatively.",
+        "d": "Rayleigh fading does not stabilize SNR; it causes fluctuations."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Which type of modulation is most affected by AWGN in terms of signal recovery?",
+      "answers": {
+        "a": "Amplitude Modulation (AM)",
+        "b": "Frequency Modulation (FM)",
+        "c": "Phase Modulation (PM)",
+        "d": "All types of modulation are equally affected."
+      },
+      "explanations": {
+        "a": "AM can be significantly affected by AWGN, especially in terms of clarity.",
+        "b": "FM is also affected, but its resilience varies.",
+        "c": "PM can be impacted, but recovery methods can mitigate effects.",
+        "d": "Correct! All types of modulation can be affected by AWGN, but the extent varies."
+      },
+      "correctAnswer": "d",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What is a common method used to mitigate the effects of Rayleigh fading?",
+      "answers": {
+        "a": "Use of higher frequencies.",
+        "b": "Implementation of equalization techniques.",
+        "c": "Increase the transmission power.",
+        "d": "Switching to digital modulation only."
+      },
+      "explanations": {
+        "a": "Higher frequencies are not always a solution; they can also be affected.",
+        "b": "Correct! Equalization techniques are commonly used to mitigate Rayleigh fading effects.",
+        "c": "Increasing power can help, but equalization is a specific technique.",
+        "d": "Digital modulation alone does not address Rayleigh fading effectively."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What role does channel coding play in relation to AWGN?",
+      "answers": {
+        "a": "It reduces the power of the noise.",
+        "b": "It helps in error correction during signal recovery.",
+        "c": "It eliminates the noise completely.",
+        "d": "It guarantees high signal clarity."
+      },
+      "explanations": {
+        "a": "Channel coding does not reduce noise power; it addresses errors.",
+        "b": "Correct! Channel coding assists in error correction in the presence of AWGN.",
+        "c": "Noise cannot be completely eliminated; coding mitigates its effects.",
+        "d": "Channel coding improves recovery but does not guarantee clarity."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "How does AWGN impact the Bit Error Rate (BER) of the received message signal?",
+      "answers": {
+        "a": "It reduces the BER significantly.",
+        "b": "It has no impact on BER.",
+        "c": "It increases the BER as the noise increases.",
+        "d": "It guarantees zero BER."
+      },
+      "explanations": {
+        "a": "AWGN does not reduce BER; it typically increases it.",
+        "b": "AWGN definitely impacts BER.",
+        "c": "Correct! As AWGN increases, the BER tends to increase as well.",
+        "d": "AWGN does not guarantee zero BER; it often leads to errors."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What is the primary challenge posed by Rayleigh fading in mobile communication?",
+      "answers": {
+        "a": "It ensures constant signal strength.",
+        "b": "It causes signal fluctuations that affect quality.",
+        "c": "It has no effect on the quality of signals.",
+        "d": "It improves overall communication reliability."
+      },
+      "explanations": {
+        "a": "Rayleigh fading does not ensure constant signal strength; it varies.",
+        "b": "Correct! Rayleigh fading leads to fluctuations that can degrade signal quality.",
+        "c": "Rayleigh fading does have a significant effect on signal quality.",
+        "d": "Rayleigh fading typically reduces, not improves, reliability."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
     }
   ]
 }
