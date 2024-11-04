@@ -1,36 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Channel Simulator Guide</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        h1, h2 {
-            color: #0056b3;
-        }
-        p {
-            margin: 10px 0;
-        }
-        ol {
-            margin: 10px 0 20px 20px;
-        }
-        li {
-            margin: 8px 0;
-        }
-        code {
-            background-color: #eaeaea;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-    </style>
+
 </head>
 <body>
     <h2>1. Input Parameters</h2>
