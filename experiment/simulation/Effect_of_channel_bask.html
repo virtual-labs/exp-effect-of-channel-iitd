@@ -10,27 +10,27 @@
 	    #instructions {
 		position: absolute;
 		top: 5px;
-		right: 300px;
+		right: 135px;
 		}
         .container {
             display: flex;
-			    height: 100vh; /* Full viewport height */
-    width: 100vw; /* Full viewport width */
+			  /*  height: 100vh;  Full viewport height */
+    /* width: 100vw;  Full viewport width */
         }
 		.left-half {
-            width: 35vw;
+            width: 35%;
 			}
         .middle {
 		position: relative;
 		overflow: auto;
-            width: 25vw;
+            width: 35%;
         }
         .right-half {
 
-            width: 20vw;
+            width: 15%;
         }
 		.right-half-ext {
-		            width: 20vw;
+		            width: 15%;
 		}
         table {
             width: auto;
@@ -71,11 +71,11 @@
 <div class="container">
     <div class="left-half">
 	            <br/><br/>
-                <div class="w-[540px]">
+                <div class="w-[450px]">
                   <img
                     src="rayleighfading.png"
                     alt="Rayleigh Fading"
-					style="width: 540px; height: 400px; position: relative; left: 25px"
+					style="width: 450px; height: 400px; position: relative; left: 35px"
                   />
 
                 <button
@@ -114,7 +114,7 @@
                   class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[180px] left-[380px]"
                   onclick="generateDemodulatedSignal()"
                 >
-                  See Received Signal
+                  Received Signal
                 </button>
 				<button
                   class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[240px]"
@@ -134,31 +134,31 @@
         <br/><br/>
         <div class="flex flex-1 flex-col justify-center items-center">
 		    <div  id = "scrolltomessage" align = "center">
-            <div class="max-h-[400px] max-w-[400px]" id="transmittedSignal"></div>
+            <div class="max-h-[400px] max-w-[500px]" id="transmittedSignal"></div>
 
 			</div>
 		    <div id = "scrolltocarrier" align = "center">
-            <div class="max-h-[400px] max-w-[400px]" id="carrier-plot"></div>
+            <div class="max-h-[400px] max-w-[500px]" id="carrier-plot"></div>
  
 			</div>
 			<div id = "scrolltomodulated" align = "center">
-			<div class="max-h-[400px] max-w-[400px]" id="modulated-plot"></div>
+			<div class="max-h-[400px] max-w-[500px]" id="modulated-plot"></div>
 		
 			</div>
 		    <div id = "scrolltoimpulse" align = "center">
-            <div class="max-h-[400px] max-w-[400px]" id="impulseResponse"></div>
+            <div class="max-h-[400px] max-w-[500px]" id="impulseResponse"></div>
 
 			</div>
 		    <div id = "scrolltonoisy" align = "center">
-			<div class="max-h-[400px] max-w-[400px]" id="noisy-plot"></div>
+			<div class="max-h-[400px] max-w-[500px]" id="noisy-plot"></div>
 
 			</div>
 			<div id = "scrolltodemodulated" align = "center">
-            <div class="max-h-[400px] max-w-[400px]" id="demodulatedSignal"></div>
+            <div class="max-h-[400px] max-w-[500px]" id="demodulatedSignal"></div>
 
 			</div>
 			<div id = "scrolltowithoutrayleigh" align = "center">
-            <div class="max-h-[400px] max-w-[400px]" id="withoutRayleigh"></div>
+            <div class="max-h-[400px] max-w-[500px]" id="withoutRayleigh"></div>
 		    <a href = "#top"><button>Back to Top</button></a>
 			</div>
         </div>
@@ -181,7 +181,7 @@
 	    <div class="right-half-ext">
 		<br/>
         <div id="berMessageSingleTap"></div>
-        <h2>BER vs SNR (AWGN only)</h2>
+        <h2>BER vs SNR (AWGN only)(without Rayleigh</h2>
         <table id="resultsTableSingleTap" border="1">
             <thead>
                 <tr>
