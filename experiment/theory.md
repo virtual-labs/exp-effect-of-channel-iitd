@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impact of Rayleigh Fading and AWGN on Digital Communication Systems</title>
     <style>
         body {
             font-family: Arial, sans-serif;
