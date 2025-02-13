@@ -2,7 +2,7 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "How does Rayleigh fading affect the amplitude of the received message signal?",
+      "question": "1. How does Rayleigh fading affect the amplitude of the received message signal?",
       "answers": {
         "a": "It causes the amplitude to remain constant.",
         "b": "It introduces variations and fluctuations in amplitude.",
@@ -19,7 +19,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "What is one major consequence of AWGN on the received message signal?",
+      "question": "2. What is one major consequence of AWGN on the received message signal?",
       "answers": {
         "a": "It enhances the clarity of the message.",
         "b": "It introduces additional randomness to the signal.",
@@ -36,7 +36,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "Which of the following best describes the impact of Rayleigh fading on communication channels?",
+      "question": "3. Which of the following best describes the impact of Rayleigh fading on communication channels?",
       "answers": {
         "a": "It stabilizes the signal during transmission.",
         "b": "It leads to constructive and destructive interference.",
@@ -53,7 +53,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "How does the presence of AWGN influence the recovery of the original message signal?",
+      "question": "4. How does the presence of AWGN influence the recovery of the original message signal?",
       "answers": {
         "a": "It facilitates the recovery process.",
         "b": "It has no impact on the recovery process.",
@@ -70,7 +70,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "What effect does Rayleigh fading have on the signal-to-noise ratio (SNR)?",
+      "question": "5. What effect does Rayleigh fading have on the signal-to-noise ratio (SNR)?",
       "answers": {
         "a": "It increases the SNR.",
         "b": "It decreases the SNR.",
@@ -87,7 +87,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "Which type of modulation is most affected by AWGN in terms of signal recovery?",
+      "question": "6. Which type of modulation is most affected by AWGN in terms of signal recovery?",
       "answers": {
         "a": "Amplitude Modulation (AM)",
         "b": "Frequency Modulation (FM)",
@@ -104,7 +104,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "What is a common method used to mitigate the effects of Rayleigh fading?",
+      "question": "7. What is a common method used to mitigate the effects of Rayleigh fading?",
       "answers": {
         "a": "Use of higher frequencies.",
         "b": "Implementation of equalization techniques.",
@@ -121,7 +121,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "What role does channel coding play in relation to AWGN?",
+      "question": "8. What role does channel coding play in relation to AWGN?",
       "answers": {
         "a": "It reduces the power of the noise.",
         "b": "It helps in error correction during signal recovery.",
@@ -138,7 +138,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "How does AWGN impact the Bit Error Rate (BER) of the received message signal?",
+      "question": "9. How does AWGN impact the Bit Error Rate (BER) of the received message signal?",
       "answers": {
         "a": "It reduces the BER significantly.",
         "b": "It has no impact on BER.",
@@ -155,7 +155,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "What is the primary challenge posed by Rayleigh fading in mobile communication?",
+      "question": "10. What is the primary challenge posed by Rayleigh fading in mobile communication?",
       "answers": {
         "a": "It ensures constant signal strength.",
         "b": "It causes signal fluctuations that affect quality.",
