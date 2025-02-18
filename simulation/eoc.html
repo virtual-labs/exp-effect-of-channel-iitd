@@ -1,0 +1,179 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.4/math.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Virtual Labs</title>
+    <style>
+      table {
+        width: 80%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+      }
+      th {
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- sidebar and body -->
+    <div class="flex min-h-[80vh]">
+      <div class="px-6 pb-6 mt-1 flex-1">
+        <div class="">
+          <div class="flex flex-col justify-center">
+            <div class="flex max-lg:flex-col gap-x-12 gap-y-2 mt-2">
+              <div class="">
+                <div class="flex items-center justify-center gap-1">
+                  <label for="distance" class="text-[#2c99ce] font-medium">Distance (m) between Tx and Rx:</label>
+                  <input
+                    class="max-lg:ml-10 border border-black px-2 py-1 rounded-sm"
+                    type="number"
+                    id="distance"
+                    name="distance"
+                    value="100"
+                  />
+                </div>
+              </div>
+              <div class="">
+                <div class="flex items-center justify-center gap-1">
+                  <label for="num_multipaths" class="text-[#2c99ce] font-medium">Number of Multipaths:</label>
+                  <input
+                    class="max-lg:ml-10 border border-black px-2 py-1 rounded-sm"
+                    type="number"
+                    id="num_multipaths" 
+                    name="num_multipaths" 
+                    value="4"
+                  />
+                </div>
+              </div>
+              <div class="flex justify-center">
+                <button
+                  class="bg-blue-500 text-white rounded-md px-2 py-1"
+                  class="button"
+                  onclick="plotMSE()"
+                >
+                  Simulate
+                </button>
+              </div>
+            </div>
+          </div>
+          <canvas id="myChart" width="800" height="400"></canvas>
+        </div>
+      </div>
+    </div>
+    <script>
+      let chartInstance = null;
+
+      function plotMSE() {
+          // Get input values
+          const distance = parseFloat(document.getElementById('distance').value);
+          const num_multipaths = parseInt(document.getElementById('num_multipaths').value);
+          
+          // Parameters
+          const SNR_dB = Array.from({ length: 41 }, (_, i) => i - 20);  // Signal-to-Noise Ratio in dB
+          const num_samples = 10000;  // Number of samples
+
+          // Generate random data symbols
+          const data = Array.from({ length: num_samples }, () => Math.round(Math.random()));
+
+          // BPSK Modulation
+          const modulated_data = data.map(bit => 2 * bit - 1);
+
+          // Initialize array to store results
+          let MSE = Array(SNR_dB.length).fill(0);
+
+          // Helper function to generate a normally distributed random number using Box-Muller transform
+          function randomNormal(mean = 0, stddev = 1) {
+              let u = 0, v = 0;
+              while (u === 0) u = Math.random(); // Convert [0,1) to (0,1)
+              while (v === 0) v = Math.random();
+              return mean + stddev * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+          }
+
+          // Helper function to generate a complex Gaussian random variable
+          function complexGaussian(mean = 0, stddev = 1) {
+              return math.complex(randomNormal(mean, stddev), randomNormal(mean, stddev));
+          }
+
+          for (let k = 0; k < SNR_dB.length; k++) {
+              const SNR_linear = Math.pow(10, SNR_dB[k] / 10);
+              const noise_variance = 1 / SNR_linear;
+
+              // Generate Rayleigh fading channel
+              let h = Array.from({ length: num_multipaths }, () => complexGaussian(0, 1 / Math.sqrt(2)));
+
+              // Apply Rayleigh fading to the signal
+              let faded_signal = Array(num_samples).fill(math.complex(0, 0));
+              for (let i = 0; i < num_multipaths; i++) {
+                  faded_signal = faded_signal.map((val, idx) => math.add(val, math.multiply(h[i], modulated_data[idx])));
+              }
+
+              // Add AWGN noise
+              const noise = Array.from({ length: num_samples }, () => complexGaussian(0, Math.sqrt(noise_variance / 2)));
+              const received_signal = faded_signal.map((val, idx) => math.add(val, noise[idx]));
+
+              // Equalization (assuming perfect CSI for simplicity)
+              const h_sum = h.reduce((acc, val) => math.add(acc, val), math.complex(0, 0));
+              const equalized_signal = received_signal.map(val => math.divide(val, h_sum));
+
+              // Demodulation
+              const demodulated_data = equalized_signal.map(val => math.re(val) > 0 ? 1 : 0);
+
+              // Calculate MSE
+              const error = modulated_data.map((val, idx) => val - math.re(equalized_signal[idx]));
+              MSE[k] = math.mean(error.map(val => Math.pow(Math.abs(val), 2)));
+          }
+
+          // Destroy previous chart if it exists
+          if (chartInstance) {
+              chartInstance.destroy();
+          }
+
+          // Plot MSE vs SNR
+          const ctx = document.getElementById('myChart').getContext('2d');
+          chartInstance = new Chart(ctx, {
+              type: 'line',
+              data: {
+                  labels: SNR_dB,
+                  datasets: [{
+                      label: 'Mean Square Error (MSE)',
+                      data: MSE,
+                      borderColor: 'blue',
+                      fill: false
+                  }]
+              },
+              options: {
+                  scales: {
+                      x: {
+                          title: {
+                              display: true,
+                              text: 'SNR (dB)'
+                          }
+                      },
+                      y: {
+                          title: {
+                              display: true,
+                              text: 'Mean Square Error (MSE)'
+                          }
+                      }
+                  },
+                  plugins: {
+                      title: {
+                          display: true,
+                          text: 'MSE vs SNR for Rayleigh Fading Channel with AWGN (using BPSK)'
+                      }
+                  }
+              }
+          });
+      }
+    </script>
+  </body>
+</html>
