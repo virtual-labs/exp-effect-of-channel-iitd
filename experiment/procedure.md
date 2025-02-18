@@ -11,7 +11,7 @@
         <li><strong>SNR (dB):</strong> Enter the desired signal-to-noise ratio in decibels.</li>
         <li><strong>Number of Multipaths:</strong> Input the number of multipath components in the channel to simulate Rayleigh fading.</li>
         <li><strong>Excess Delay (ms):</strong> Specify the delay experienced by each multipath in milliseconds.</li>
-        <li><strong>Bit Rate (bps):</strong> Enter the bit rate of the message signal in bits per second.</li>
+        <li><strong>Bit Rate (bps):</strong> The bit rate of the message signal in bits is fixed at 100 bits per second.</li>
     </ol>
     <h2>2. Visualizing the Channel Effects</h2>
     <p>The simulator will process the input parameters and display how the original message signal is affected by Rayleigh fading and AWGN noise. The visualizations may include:</p>
