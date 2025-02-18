@@ -296,7 +296,8 @@
             const numTaps = parseInt(document.getElementById('numTaps').value);
             if (numTaps >= 11) {
                 alert("Excess delay should be less than 10 ms as the symbol duration for BASK is 10 ms.");
-                return;
+               window.location.reload(true);  
+				return;
             }
             const N_total = 1e6;
             const U_sig = 10;
