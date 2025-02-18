@@ -294,6 +294,7 @@
             const numTaps = parseInt(document.getElementById('numTaps').value);
             if (numTaps >= 11) {
                 alert("Excess delay should be less than 10 ms as the symbol duration for BPSK is 10 ms.");
+		    window.location.reload(true); 
                 return;
             }
             const N_total = 1e6;
