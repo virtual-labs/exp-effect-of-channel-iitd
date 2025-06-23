@@ -7,26 +7,32 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	<title>Virtual Labs</title>
     <style>
+	    #instructions {
+		position: absolute;
+		top: 5px;
+		right: 135px;
+		}
         .container {
             display: flex;
 			  /*  height: 100vh;  Full viewport height */
     /* width: 100vw;  Full viewport width */
         }
 		.left-half {
-            width: 50%;
-            margin-left: 60px;
+            width: 35%;
 			}
         .middle {
 		position: relative;
 		overflow: auto;
-            width: 50%;
+            width: 35%;
         }
         .right-half {
 
-            width: 15%;
+            width: 40%;
+            margin-left: 60px;
         }
 		.right-half-ext {
-		            width: 15%;
+		            width: 40%;
+                    margin-left: 60px;
 		}
         table {
             width: auto;
@@ -45,40 +51,37 @@
     </style>
 </head>
 <body>
-    <div id = "instructions">
-        <h1>Instructions</h1>
-    <ul>
-        <li class="step step1">Step 1: Click 'Generate Message', 'Generate Carrier', and 'Generate BASK Signal' to generate the input, carrier, and the modulated signal, respectively</li>
-        <li class="step step2">Step 2: Click 'Generate Multi-path for Rayleigh' and 'ADD AWGN Noise' to simulate fading and add noise</li>
-        <li class="step step3">Step 3: Click 'See Received Signal' for demodulation</li>
-        <li class="step step4">Step 4: Click 'Received Signal without Rayleigh' to see the signal unaffected by Rayleigh Fading</li>
-        <li class="step step1">Step 5: Click 'Plot BER vs SNR' to compare BER with and without Rayleigh</li>
-    </ul>
-    </div>
-    <br/>
     <div  style = "margin-left: 30px;">
-    <h1>BASK Simulation (with AWGN + Rayleigh)</h1>
-	<br/>
-    <label for="snr" class="custom-text">Enter SNR value in dB:</label>
-    <input type="number" id="snr" value="0"><br>
-
-    <label for="numTaps" class="custom-text">Enter the number of Multi-paths:</label>
-    <input type="number" id="numTaps" min = "1" value="4"><br>
-
-    <label for="excessDelay" class="custom-text">Excess Delay (in ms):</label>
-    <input type="number" id="excessDelay" value="3"  readonly><br>
-    
-    <label for="bitRate" class="custom-text">Bit Rate (bps):</label>
-    <input type="number" id="bitRate" value="100" readonly>
+            <h1>Calculation of BER vs. SNR for BASK Simulation (with AWGN + Rayleigh)</h1>
+            <br/>
+            <label for="snr" class="custom-text">Enter SNR value in dB:</label>
+            <input type="number" id="snr" value="0"><br>
+        
+            <label for="numTaps" class="custom-text">Enter the number of Multi-paths:</label>
+            <input type="number" id="numTaps" min = "1" value="4"><br>
+        
+            <label for="excessDelay" class="custom-text">Excess Delay (in ms):</label>
+            <input type="number" id="excessDelay" value="3"  readonly><br>
+            
+            <label for="bitRate" class="custom-text">Bit Rate (bps):</label>
+            <input type="number" id="bitRate" value="100" readonly>
+        
+        <br/><br/>
+        <button
+        class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute left -[90px]"
+        onclick="plotBERvsSNR()"
+      >
+      Calculate and Plot BER vs SNR
+      </button>
+        </div>
 	
-    </div>
 	<br>
 <br/>
 
 
 
 <div class="container">
-    <div class="left-half relative">
+    <div class="left-half hidden">
 	            <br/><br/>
                 <div class="w-[450px]">
                   <img
@@ -88,59 +91,58 @@
                   />
 
                 <button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[110px] left-[-20px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[340px] left-[2px]"
                   onclick="runSimulation()"
                 >
                   Generate Message
                 </button>
 				
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[150px] left-[-20px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[380px] left-[2px]"
                   onclick="generateCarrierSignal()"
                 >
                   Generate Carrier
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[300px] left-[-20px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[510px] left-[2px]"
                   onclick="generateASKModulatedSignal()"
                 >
                   Generate BASK<br/>Signal
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[440px] left-[130px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[680px] left-[162px]"
                   onclick="generateChannelImpulseResponse()"
                 >
                   Generate Multi-path for Rayleigh
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[480px] left-[180px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[720px] left-[202px]"
                   onclick="generateNoisySignal()"
                 >
                   Add AWGN Noise
                 </button>
 					
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[180px] left-[400px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[180px] left-[380px]"
                   onclick="generateDemodulatedSignal()"
                 >
                   Received Signal
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[270px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[240px]"
                   onclick="withoutRayleigh()"
                 >
                 Received Signal<br/>without Rayleigh
                 </button>
-                <a href = "./Effect_of_channel_bask_ber.html">
                 <button
                   class="button bg-gray-500 text-white rounded-md px-2 py-1 relative top-[120px] right-[90px]"
+                  onclick="plotBERvsSNR()"
                 >
-                Plot BER vs SNR
+                Calculate and Plot BER vs SNR
                 </button>
-               </a>
                 </div>
 	</div>
-    <div class="middle">
+    <div class="middle hidden">
         <br/><br/>
         <div class="flex flex-1 flex-col justify-center items-center">
 		    <div  id = "scrolltomessage" align = "center">
@@ -173,8 +175,9 @@
 			</div>
         </div>
     </div>
-    <div class="right-half hidden">
+    <div class="right-half">
 	<br/>
+        <div id = "div1">
         <div id="berMessage"></div>
         <h2>BER vs SNR (AWGN + Rayleigh)</h2>
         <table id="resultsTable" border="1">
@@ -186,10 +189,14 @@
             </thead>
             <tbody></tbody>
         </table>
+        </div>
+        <br/>
+        <button onclick="printDiv('div1')" class="bg-blue-500 text-white p-2 rounded-md">Print</button>
         <div id="berVsSNR"></div>
     </div>
-	    <div class="right-half-ext hidden">
+	    <div class="right-half-ext">
 		<br/>
+        <div id = "div2">
         <div id="berMessageSingleTap"></div>
         <h2>BER vs SNR (AWGN only)(without Rayleigh</h2>
         <table id="resultsTableSingleTap" border="1">
@@ -201,10 +208,40 @@
             </thead>
             <tbody></tbody>
         </table>
+    </div>
+    <br/>
+    <button onclick="printDiv('div2')" class="bg-blue-500 text-white p-2 rounded-md">Print</button>
         <div id="berVsSNRSingleTap"></div>
     </div>
 </div>
 
+
+
+</div>
+	
+ <script>
+    function checkFrequencies() {
+      // Get value from input field
+      let snrdB = parseFloat(document.getElementById('snr').value);
+  
+      // Check if the value is outside the valid range
+      if (snrdB < -10 || snrdB > 15 || isNaN(snrdB)) {
+        alert("Choose SNR (dB) value between -10 to 15.");
+        window.location.reload(); // optional: reload page
+      }
+    }
+  
+    // Attach event listeners to all buttons
+    function attachEventListeners() {
+      let buttons = document.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.addEventListener('click', checkFrequencies);
+      });
+    }
+  
+    // Run when DOM is ready
+    document.addEventListener('DOMContentLoaded', attachEventListeners);
+  </script>
     <script>
         let results = [];
 		let resultsSingleTap = [];
@@ -430,8 +467,8 @@ function plotBERvsSNRSingleTap() {
 
     const layout = {
         title: 'BER vs. SNR (AWGN only)',
-        xaxis: { title: 'SNR (dB)' },
-        yaxis: { title: 'BER', type: 'log' }
+        xaxis: { title: 'SNR (dB)' , zeroline: false},
+        yaxis: { title: 'BER', type: 'log', zeroline: false }
     };
 
     Plotly.newPlot('berVsSNRSingleTap', [trace], layout);
@@ -450,6 +487,7 @@ function plotBERvsSNRSingleTap() {
         }
 
         function plotBERvsSNR() {
+            runSimulation();
             if (results.length === 0) {
                 alert('No results to plot.');
                 return;
@@ -468,9 +506,10 @@ function plotBERvsSNRSingleTap() {
 
             const layout = {
                 title: 'BER vs. SNR (AWGN + Rayleigh)',
-                xaxis: { title: 'SNR (dB)' },
+                xaxis: { title: 'SNR (dB)', zeroline: false },
                 yaxis: { title: 'BER', 
-				type: 'log'
+				type: 'log',
+                zeroline: false
 				},
 				
             };
@@ -653,6 +692,15 @@ function generateASKModulatedSignal() {
 			document.getElementById('scrolltonoisy').style.display = 'block';
 			            document.getElementById('scrolltonoisy').scrollIntoView({ behavior: 'smooth' });
         }
+
+        function printDiv(divId) {
+          let content = document.getElementById(divId).innerHTML;
+          let originalContent = document.body.innerHTML;
+        
+          document.body.innerHTML = content; // Replace the entire page with div content
+          window.print();
+          document.body.innerHTML = originalContent; // Restore original page content
+        }
     </script>
 		    <style>
 		/* Style for input field */
@@ -675,74 +723,37 @@ h2,.custom-text {
   font-weight: 1000; /* font-medium */
 }
 
+h1 {
+  color: #2c99ce; /* text-[#2c99ce] */
+  font-weight: 1000; /* font-medium */
+  font-size: 30px;
+}
+
 #scrolltomessage, #scrolltocarrier, #scrolltomodulated, #scrolltoimpulse, #scrolltonoisy,
 #scrolltodemodulated, #scrolltowithoutrayleigh {
 display: none;
 }
 
-#container {
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
-  padding: 25px 40px;
-  max-width: 100%;
-  margin: 20px auto;
-  text-align: left;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-h1 {
-  color: #1e3a8a;
-  font-size: 24px;
-  margin-bottom: 25px;
-  text-align: justify;
-}
-
 ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+    list-style-type: none;
+    padding: 0;
 }
 
-li.step {
-  margin: 12px 0;
-  padding: 12px 15px;
-  border-radius: 6px;
-  font-size: 17px;
-  font-weight: 500;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, background-color 0.2s ease;
+li {
+    background-color: #e0e7ff;
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 14px; /* Set font size for list items */
 }
 
-li.step::before {
-  content: "✔";
-  color: #10b981;
-  margin-right: 10px;
-  font-weight: bold;
+li::before {
+    content: "✔";
+    color: #4caf50;
+    margin-right: 10px;
 }
 
-li.step:hover {
-  transform: scale(1.02);
-  background-color: #f3f4f6;
-}
-
-/* Color code each step */
-.step1 {
-  background-color: #ffe0e0;
-  border-left: 5px solid #ef4444;
-}
-.step2 {
-  background-color: #e0f7ff;
-  border-left: 5px solid #0ea5e9;
-}
-.step3 {
-  background-color: #e0ffe5;
-  border-left: 5px solid #22c55e;
-}
-.step4 {
-  background-color: #f5e0ff;
-  border-left: 5px solid #a855f7;
-}
-	</style>
+    </style>
 </body>
 </html>
