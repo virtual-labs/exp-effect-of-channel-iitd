@@ -7,26 +7,31 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	<title>Virtual Labs</title>
     <style>
+	    #instructions {
+		position: absolute;
+		top: 5px;
+		right: 135px;
+		}
         .container {
             display: flex;
-			  /*  height: 100vh;  Full viewport height */
-    /* width: 100vw;  Full viewport width */
+
         }
 		.left-half {
-            width: 50%;
-            margin-left: 60px;
+            width: 35%;
 			}
         .middle {
 		position: relative;
 		overflow: auto;
-            width: 50%;
+            width: 35%;
         }
         .right-half {
 
-            width: 15%;
+            width: 40%;
+            margin-left: 60px;
         }
 		.right-half-ext {
-		            width: 15%;
+		            width: 40%;
+                    margin-left: 60px;
 		}
         table {
             width: auto;
@@ -45,40 +50,37 @@
     </style>
 </head>
 <body>
-    <div id = "instructions">
-        <h1>Instructions</h1>
-    <ul>
-        <li class="step step1">Step 1: Click 'Generate Message', 'Generate Carrier', and 'Generate BASK Signal' to generate the input, carrier, and the modulated signal, respectively</li>
-        <li class="step step2">Step 2: Click 'Generate Multi-path for Rayleigh' and 'ADD AWGN Noise' to simulate fading and add noise</li>
-        <li class="step step3">Step 3: Click 'See Received Signal' for demodulation</li>
-        <li class="step step4">Step 4: Click 'Received Signal without Rayleigh' to see the signal unaffected by Rayleigh Fading</li>
-        <li class="step step1">Step 5: Click 'Plot BER vs SNR' to compare BER with and without Rayleigh</li>
-    </ul>
-    </div>
-    <br/>
     <div  style = "margin-left: 30px;">
-    <h1>BASK Simulation (with AWGN + Rayleigh)</h1>
-	<br/>
-    <label for="snr" class="custom-text">Enter SNR value in dB:</label>
-    <input type="number" id="snr" value="0"><br>
-
-    <label for="numTaps" class="custom-text">Enter the number of Multi-paths:</label>
-    <input type="number" id="numTaps" min = "1" value="4"><br>
-
-    <label for="excessDelay" class="custom-text">Excess Delay (in ms):</label>
-    <input type="number" id="excessDelay" value="3"  readonly><br>
+        <h1>Calculation of BER vs. SNR for BPSK Simulation (with AWGN + Rayleigh)</h1>
+        <br/>
+        <label for="snr" class="custom-text">Enter SNR value in dB:</label>
+        <input type="number" id="snr" value="0"><br>
     
-    <label for="bitRate" class="custom-text">Bit Rate (bps):</label>
-    <input type="number" id="bitRate" value="100" readonly>
-	
+        <label for="numTaps" class="custom-text">Enter the number of Multi-paths:</label>
+        <input type="number" id="numTaps" min = "1" value="4"><br>
+    
+        <label for="excessDelay" class="custom-text">Excess Delay (in ms):</label>
+        <input type="number" id="excessDelay" value="3"  readonly><br>
+        
+        <label for="bitRate" class="custom-text">Bit Rate (bps):</label>
+        <input type="number" id="bitRate" value="100" readonly>
+    
+    <br/><br/>
+    <button
+    class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute left -[90px]"
+    onclick="plotBERvsSNR()"
+  >
+  Calculate and Plot BER vs SNR
+  </button>
     </div>
+	
 	<br>
 <br/>
 
 
 
 <div class="container">
-    <div class="left-half relative">
+    <div class="left-half hidden">
 	            <br/><br/>
                 <div class="w-[450px]">
                   <img
@@ -88,59 +90,58 @@
                   />
 
                 <button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[110px] left-[-20px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[340px] left-[2px]"
                   onclick="runSimulation()"
                 >
                   Generate Message
                 </button>
 				
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[150px] left-[-20px]"
-                  onclick="generateCarrierSignal()"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[380px] left-[2px]"
+                  onclick="generateCarrierSignal()()"
                 >
                   Generate Carrier
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[300px] left-[-20px]"
-                  onclick="generateASKModulatedSignal()"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[510px] left-[2px]"
+                  onclick="generatePSKModulatedSignal()"
                 >
-                  Generate BASK<br/>Signal
+                  Generate BPSK<br/>Signal
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[440px] left-[130px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[680px] left-[162px]"
                   onclick="generateChannelImpulseResponse()"
                 >
                   Generate Multi-path for Rayleigh
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[480px] left-[180px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[720px] left-[202px]"
                   onclick="generateNoisySignal()"
                 >
                   Add AWGN Noise
                 </button>
 					
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[180px] left-[400px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[180px] left-[380px]"
                   onclick="generateDemodulatedSignal()"
                 >
-                  Received Signal
+                  See Received Signal
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[270px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[240px]"
                   onclick="withoutRayleigh()"
                 >
                 Received Signal<br/>without Rayleigh
                 </button>
-                <a href = "./Effect_of_channel_bask_ber.html">
                 <button
                   class="button bg-gray-500 text-white rounded-md px-2 py-1 relative top-[120px] right-[90px]"
+                  onclick="plotBERvsSNR()"
                 >
                 Plot BER vs SNR
                 </button>
-               </a>
                 </div>
 	</div>
-    <div class="middle">
+    <div class="middle hidden">
         <br/><br/>
         <div class="flex flex-1 flex-col justify-center items-center">
 		    <div  id = "scrolltomessage" align = "center">
@@ -173,8 +174,9 @@
 			</div>
         </div>
     </div>
-    <div class="right-half hidden">
+    <div class="right-half">
 	<br/>
+    <div id = "div1">
         <div id="berMessage"></div>
         <h2>BER vs SNR (AWGN + Rayleigh)</h2>
         <table id="resultsTable" border="1">
@@ -186,12 +188,16 @@
             </thead>
             <tbody></tbody>
         </table>
+    </div>
+    <br/>
+    <button onclick="printDiv('div1')" class="bg-blue-500 text-white p-2 rounded-md">Print</button>
         <div id="berVsSNR"></div>
     </div>
-	    <div class="right-half-ext hidden">
+	    <div class="right-half-ext">
 		<br/>
+        <div id = "div2">
         <div id="berMessageSingleTap"></div>
-        <h2>BER vs SNR (AWGN only)(without Rayleigh</h2>
+        <h2>BER vs SNR (AWGN only)(without Rayleigh)</h2>
         <table id="resultsTableSingleTap" border="1">
             <thead>
                 <tr>
@@ -201,25 +207,54 @@
             </thead>
             <tbody></tbody>
         </table>
+    </div>
+    <br/>
+    <button onclick="printDiv('div2')" class="bg-blue-500 text-white p-2 rounded-md">Print</button>
         <div id="berVsSNRSingleTap"></div>
     </div>
 </div>
 
+
+
+</div>
+	
+<script>
+    function checkFrequencies() {
+      // Get value from input field
+      let snrdB = parseFloat(document.getElementById('snr').value);
+  
+      // Check if the value is outside the valid range
+      if (snrdB < -10 || snrdB > 10 || isNaN(snrdB)) {
+        alert("Choose SNR (dB) value between -10 to 10.");
+        window.location.reload(); // optional: reload page
+      }
+    }
+  
+    // Attach event listeners to all buttons
+    function attachEventListeners() {
+      let buttons = document.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.addEventListener('click', checkFrequencies);
+      });
+    }
+  
+    // Run when DOM is ready
+    document.addEventListener('DOMContentLoaded', attachEventListeners);
+  </script>
     <script>
         let results = [];
 		let resultsSingleTap = [];
+		let berSingleTap = [];
         let data = [];
 		let modulated_signal = [];
-		let m = []; // Modulated signal
 		let EbN0dB = 0;
 		let excessDelay = 0;
 		let h = [];
 		let dataHat = [];
 		let dataHatSingleTap = [];
-		let upsampledSignal = [];
-
-        function modulateBASK(data) {
-            return data.map(bit => bit);
+		
+        function modulateBPSK(data) {
+            return data.map(bit => 2 * bit - 1);
         }
 
         function upsampleSignal(signal, U_sig) {
@@ -253,8 +288,8 @@
             return signal.filter((_, i) => i % U_sig === 0);
         }
 
-        function demodulateBASK(signal) {
-            return signal.map(s => s > 0.5 ? 1 : 0);
+        function demodulateBPSK(signal) {
+            return signal.map(s => s > 0 ? 1 : 0);
         }
 
         function calculateBER(data, dataHat) {
@@ -287,31 +322,32 @@
 
         document.getElementById("numTaps").addEventListener("input", updateFields);
 
-        function runSimulation() {
+       function runSimulation() {
             const EbN0dB = parseFloat(document.getElementById('snr').value);
             const numTaps = parseInt(document.getElementById('numTaps').value);
             if (numTaps >= 11) {
-                alert("Excess delay should be less than 10 ms as the symbol duration for BASK is 10 ms.");
-               window.location.reload(true);  
-				return;
+                alert("Excess delay should be less than 10 ms as the symbol duration for BPSK is 10 ms.");
+		    window.location.reload(true); 
+                return;
             }
             const N_total = 1e6;
             const U_sig = 10;
 
             // Channel Impulse Response
             const delays = Array.from({ length: numTaps }, (_, i) => i);
+			h = [];
             h = delays.map(d => 0.8 * Math.exp(-d / (numTaps / 2)));
             h = h.map(v => v / Math.sqrt(h.reduce((acc, x) => acc + x * x, 0)));
 
             // Generate random binary data
             data = Array.from({ length: N_total }, () => Math.floor(Math.random() * 2));
-			
             const upsampledtransmittedSignal = upsampleSignal(data, U_sig);
-            // BASK Modulation
-            const BASKMod = modulateBASK(data);
+			
+            // BPSK Modulation
+            const bpskMod = modulateBPSK(data);
 
-            // Upsample the BASK signal
-            upsampledSignal = upsampleSignal(BASKMod, U_sig);
+            // Upsample the BPSK signal
+            const upsampledSignal = upsampleSignal  (bpskMod, U_sig);
 
             // Transmit signal through the channel
             const txSignal = manualConv(upsampledSignal, h);
@@ -319,26 +355,25 @@
             // Generate and add AWGN noise
             const rxSignal = addAWGN(txSignal, EbN0dB);
 
-            // Downsample to recover the original BASK samples
+            // Downsample to recover the original BPSK samples
             const downsampledSignal = downsampleSignal(rxSignal, U_sig);
 
-            // BASK Demodulation
-            dataHat = demodulateBASK(downsampledSignal);
+            // BPSK Demodulation
+			dataHat = [];
+            dataHat = demodulateBPSK(downsampledSignal);
             const upsampleddataHat = upsampleSignal(dataHat, U_sig);
             // Calculate BER
             const berMultipath = calculateBER(data, dataHat.slice(0, N_total));
-			
 
             // Calculate BER for single-tap channel h = 1
             const singleTapH = [1];
             const txSignalSingleTap = manualConv(upsampledSignal, singleTapH);
             const rxSignalSingleTap = addAWGN(txSignalSingleTap, EbN0dB);
             const downsampledSignalSingleTap = downsampleSignal(rxSignalSingleTap, U_sig);
-            dataHatSingleTap = demodulateBASK(downsampledSignalSingleTap);
-            const berSingleTap = calculateBER(data, dataHatSingleTap.slice(0, N_total));
+			dataHatSingleTap = [];
+            dataHatSingleTap = demodulateBPSK(downsampledSignalSingleTap);
+            berSingleTap = calculateBER(data, dataHatSingleTap.slice(0, N_total));
 			const upsampleddataHatSingleTap = upsampleSignal(dataHatSingleTap, U_sig);
-
-
 
             // Check for duplicate SNR value
             if (results.some(result => result.snr === EbN0dB)) {
@@ -359,7 +394,8 @@
 
            // Update the content of the div using innerHTML
            document.getElementById('berMessage').innerHTML = message;
-			
+		   
+
 			const transmittedSignalTrace = {
 				x: Array.from({ length: 100 }, (_, i) => i / 100).flatMap(i => [i, i, null]),
 				y: data.slice(0, 10).flatMap(y => [0, y, null]),
@@ -373,14 +409,10 @@
 				xaxis: { title: 'Time (s)' },
 				yaxis: { title: 'Amplitude' }
 			});
-
+			
 			// Scroll to the plot area
 		    document.getElementById('scrolltomessage').style.display = 'block';
             document.getElementById('scrolltomessage').scrollIntoView({ behavior: 'smooth' });
-            //const repeatFactor = 10;
-            //const demodulatedSignalExpanded = expandBits(dataHat.slice(0, 100), repeatFactor);
-            //const demodulatedSignalScaled = demodulatedSignalExpanded.map(bit => bit);
-            
 ///////////////////////////////////////
 function updateResultsTableSingleTap() {
     const tableBody = document.getElementById('resultsTableSingleTap').getElementsByTagName('tbody')[0];
@@ -430,13 +462,78 @@ function plotBERvsSNRSingleTap() {
 
     const layout = {
         title: 'BER vs. SNR (AWGN only)',
-        xaxis: { title: 'SNR (dB)' },
-        yaxis: { title: 'BER', type: 'log' }
+        xaxis: { title: 'SNR (dB)' , zeroline: false},
+        yaxis: { title: 'BER', type: 'log', zeroline: false }
     };
 
     Plotly.newPlot('berVsSNRSingleTap', [trace], layout);
 }
+       
 
+			
+			    function generateChannelImpulseResponse() {
+            // Display impulse response and other plots
+            const impulseResponseTrace = {
+                x: h.flatMap((_, i) => [i, i, null]),
+                y: h.flatMap(y => [0, y, null]),
+                mode: 'lines',
+                line: { color: 'blue', width: 4 },
+                type: 'scatter'
+            };
+
+            const layout = {
+			    title: "Channel Impulse Response",
+                xaxis: { title: 'Time (ms)' },
+                yaxis: { title: 'Channel Gain' },
+
+            };
+		    Plotly.newPlot('impulseResponse', [impulseResponseTrace], layout);
+			// Scroll to the plot area
+
+            document.getElementById('scrolltoimpulse').style.display = 'block';
+            document.getElementById('scrolltoimpulse').scrollIntoView({ behavior: 'smooth' });
+		}
+			
+		function generateDemodulatedSignal() {    
+            const demodulatedSignalTrace = {
+                x: Array.from({ length: 100 }, (_, i) => i/100).flatMap(i => [i, i, null]),
+                y: dataHat.slice(0, 10).flatMap(y => [0, y, null]),
+                mode: 'lines',
+	            line: { color: 'blue', width: 4 },
+                type: 'scatter'
+            };
+            Plotly.newPlot('demodulatedSignal', [demodulatedSignalTrace], {
+			    title : "Received Message Signal",
+                xaxis: { title: 'Time (s)' },
+                yaxis: { title: 'Amplitude' }
+            });
+						// Scroll to the plot area
+
+			document.getElementById('scrolltodemodulated').style.display = 'block';
+			            document.getElementById('scrolltodemodulated').scrollIntoView({ behavior: 'smooth' });
+			}
+			
+	       function withoutRayleigh() {	
+			const withoutRayleighTrace = {
+			    
+                x: Array.from({ length: 100 }, (_, i) => i / 100).flatMap(i => [i, i, null]),
+                y: dataHatSingleTap.slice(0, 10).flatMap(y => [0, y, null]),
+                mode: 'lines',
+			    line: { color: 'blue', width: 4 },
+                type: 'scatter'
+            };
+            Plotly.newPlot('withoutRayleigh', [withoutRayleighTrace], {
+			    title : "Received Message Signal (without Rayleigh)",
+                xaxis: { title: 'Time (s)' },
+                yaxis: { title: 'Amplitude' }
+            });
+						// Scroll to the plot area
+									document.getElementById('scrolltowithoutrayleigh').style.display = 'block';
+            document.getElementById('scrolltowithoutrayleigh').scrollIntoView({ behavior: 'smooth' });
+
+			}
+			
+ 
 
         function updateResultsTable() {
             const tableBody = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
@@ -450,6 +547,7 @@ function plotBERvsSNRSingleTap() {
         }
 
         function plotBERvsSNR() {
+            runSimulation();
             if (results.length === 0) {
                 alert('No results to plot.');
                 return;
@@ -467,19 +565,61 @@ function plotBERvsSNRSingleTap() {
             };
 
             const layout = {
-                title: 'BER vs. SNR (AWGN + Rayleigh)',
-                xaxis: { title: 'SNR (dB)' },
+                title: 'BER vs. SNR (Rayleigh + AWGN)',
+                xaxis: { title: 'SNR (dB)' , zeroline: false},
                 yaxis: { title: 'BER', 
-				type: 'log'
-				},
-				
+				type: "log",
+                zeroline: false
+				}
             };
 
             Plotly.newPlot('berVsSNR', [trace], layout);
-			plotBERvsSNRSingleTap();
+            plotBERvsSNRSingleTap();
         }
 		
-				    function generateCarrierSignal() {
+		
+function generatePSKModulatedSignal() {
+    const Fs = 1000; // Sampling frequency
+    const fc = 20; // Carrier frequency
+    const bit_rate = 10; // Bit rate
+    const num_bits = 100; // Number of bits
+    const phase_shift_value = Math.PI; // Phase shift for PSK
+
+    // Time array for one bit duration
+    const t = Array.from({ length: Math.floor(Fs / bit_rate) }, (_, i) => i / Fs);
+    modulated_signal = [];
+    // PSK modulation
+	const newdata = data.slice(0, 10);
+    for (const data_element of newdata) {
+        const phase = data_element === 0 ? 0 : phase_shift_value;
+        const signal = t.map((time) => Math.sin(2 * Math.PI * fc * time + phase));
+        modulated_signal = modulated_signal.concat(signal);
+    }
+
+    // Plot modulated signal
+    const modulatedData = [{
+        x: Array.from({ length: modulated_signal.length }, (_, i) => (i / Fs/10)),
+        y: modulated_signal.slice(0,1000),
+        type: "scatter",
+        mode: "lines",
+        name: "Modulated Signal",
+    }];
+
+    const modulatedLayout = {
+        title: "BPSK Modulated Signal",
+        xaxis: { title: "Time (s)" },
+        yaxis: { title: "Amplitude" },
+    };
+
+    Plotly.newPlot("modulated-plot", modulatedData, modulatedLayout);
+
+    document.getElementById('scrolltomodulated').style.display = 'block';
+	    document.getElementById('scrolltomodulated').scrollIntoView({ behavior: 'smooth' });
+			}
+			            
+
+		
+		    function generateCarrierSignal() {
             Fs = 1000;
             fc = 20;
             const t = Array.from({ length: 1 * Fs }, (_, i) => i / Fs);
@@ -506,133 +646,10 @@ function plotBERvsSNRSingleTap() {
 			            document.getElementById('scrolltocarrier').scrollIntoView({ behavior: 'smooth' });
         }
 		
-		
-		function generateASKModulatedSignal1() {
-		        const BASKSignalTrace = {
-                x: Array.from({ length: 100 * 10 }, (_, i) => i / 10 / 100),
-                y: upsampledSignal.slice(0, 100 * 10),
-                mode: 'lines',
-                type: 'scatter'
-            };
-            Plotly.newPlot('modulated-plot1', [BASKSignalTrace], {
-                xaxis: { title: 'Time (s)' },
-                yaxis: { title: 'Amplitude' }
-            });
-			
-		}
-		
-function generateASKModulatedSignal() {
-    const fs = 1000; // Sampling frequency
-    const f = 20;    // Carrier frequency
-    const bp = 1/100; // Bit period (seconds)
-    
-    const messageSignal = data.slice(0, 10); // Assuming data is defined elsewhere
-    const bit = messageSignal; // Use messageSignal directly if it represents the bit values
-    
-    const t1 = []; // Time array for the modulated signal
-    for (let i = 0; i < fs * bit.length; i++) {
-        t1.push((i / fs) * bp); // Time array for each bit period
-    }
-    
-    const A1 = 1; // Amplitude for bit 1
-    const A2 = 0; // Amplitude for bit 0
-    
-   
-    for (let i = 0; i < bit.length; i++) {
-        const t2 = Array.from({ length: fs }, (_, k) => k / fs); // Time array for one bit period
-        const y = bit[i] === 1
-            ? t2.map(t2 => A1 * Math.cos(2 * Math.PI * f * t2))
-            : t2.map(t2 => A2 * Math.cos(2 * Math.PI * f * t2));
-        m = m.concat(y); // Concatenate each bit period's signal
-    }
-    
-    const modulatedData = [
-        {
-            x: t1,
-            y: m,
-            type: "scatter",
-            mode: "lines",
-            name: "BASK Modulated Signal",
-            line: { color: "blue" },
-        },
-    ];
-    
-    Plotly.newPlot("modulated-plot", modulatedData, {
-        title: "ASK Modulated Signal",
-    });
-				// Scroll to the plot area
-
-			document.getElementById('scrolltomodulated').style.display = 'block';
-			            document.getElementById('scrolltomodulated').scrollIntoView({ behavior: 'smooth' });
-}
-
-		
-		function generateChannelImpulseResponse() {
-		            // Display impulse response and other plots
-            const impulseResponseTrace = {
-                x: h.flatMap((_, i) => [i, i, null]),
-                y: h.flatMap(y => [0, y, null]),
-                mode: 'lines',
-                line: { color: 'blue', width: 4 },
-                type: 'scatter'
-            };
-
-            const layout = {
-			    title: "Channel Impulse Response",
-                xaxis: { title: 'Time (ms)' },
-                yaxis: { title: 'Channel Gain' }
-            };
-
-            Plotly.newPlot('impulseResponse', [impulseResponseTrace], layout);
-						// Scroll to the plot area
-
-            document.getElementById('scrolltoimpulse').style.display = 'block';
-            document.getElementById('scrolltoimpulse').scrollIntoView({ behavior: 'smooth' });
-			}
-			
-			function generateDemodulatedSignal() {    
-            const demodulatedSignalTrace = {
-                x: Array.from({ length: 100 }, (_, i) => i/100).flatMap(i => [i, i, null]),
-                y: dataHat.slice(0, 10).flatMap(y => [0, y, null]),
-                mode: 'lines',
-	            line: { color: 'blue', width: 4 },
-                type: 'scatter'
-            };
-            Plotly.newPlot('demodulatedSignal', [demodulatedSignalTrace], {
-			    title : "Received Message Signal",
-                xaxis: { title: 'Time (s)' },
-                yaxis: { title: 'Amplitude' }
-            });
-						// Scroll to the plot area
-
-			document.getElementById('scrolltodemodulated').style.display = 'block';
-			           document.getElementById('scrolltodemodulated').scrollIntoView({ behavior: 'smooth' });
-			}
-			
-	    function withoutRayleigh() {	
-			const withoutRayleighTrace = {
-			    
-                x: Array.from({ length: 100 }, (_, i) => i / 100).flatMap(i => [i, i, null]),
-                y: dataHatSingleTap.slice(0, 10).flatMap(y => [0, y, null]),
-                mode: 'lines',
-			    line: { color: 'blue', width: 4 },
-                type: 'scatter'
-            };
-            Plotly.newPlot('withoutRayleigh', [withoutRayleighTrace], {
-			    title : "Received Message Signal (without Rayleigh)",
-                xaxis: { title: 'Time (s)' },
-                yaxis: { title: 'Amplitude' }
-            });
-						// Scroll to the plot area
-									document.getElementById('scrolltowithoutrayleigh').style.display = 'block';
-            document.getElementById('scrolltowithoutrayleigh').scrollIntoView({ behavior: 'smooth' });
-
-			}
-			
-		    function generateNoisySignal() {
+	    function generateNoisySignal() {
 		    const Fs = 1000;
 			const EbN0dB = parseFloat(document.getElementById('snr').value);
-            const noisy_signal = addAWGN(m, EbN0dB);
+            const noisy_signal = addAWGN(modulated_signal, EbN0dB);
             const NoisySignal = [{
                 x: Array.from({ length: noisy_signal.length }, (_, i) => (i / Fs/10)),
                 y: noisy_signal.slice(0,1000),
@@ -653,6 +670,18 @@ function generateASKModulatedSignal() {
 			document.getElementById('scrolltonoisy').style.display = 'block';
 			            document.getElementById('scrolltonoisy').scrollIntoView({ behavior: 'smooth' });
         }
+
+
+
+        function printDiv(divId) {
+          let content = document.getElementById(divId).innerHTML;
+          let originalContent = document.body.innerHTML;
+        
+          document.body.innerHTML = content; // Replace the entire page with div content
+          window.print();
+          document.body.innerHTML = originalContent; // Restore original page content
+        }
+
     </script>
 		    <style>
 		/* Style for input field */
@@ -675,74 +704,37 @@ h2,.custom-text {
   font-weight: 1000; /* font-medium */
 }
 
+h1 {
+  color: #2c99ce; /* text-[#2c99ce] */
+  font-weight: 1000; /* font-medium */
+  font-size: 30px;
+}
+
 #scrolltomessage, #scrolltocarrier, #scrolltomodulated, #scrolltoimpulse, #scrolltonoisy,
 #scrolltodemodulated, #scrolltowithoutrayleigh {
 display: none;
 }
 
-#container {
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
-  padding: 25px 40px;
-  max-width: 100%;
-  margin: 20px auto;
-  text-align: left;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-h1 {
-  color: #1e3a8a;
-  font-size: 24px;
-  margin-bottom: 25px;
-  text-align: justify;
-}
-
 ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+    list-style-type: none;
+    padding: 0;
 }
 
-li.step {
-  margin: 12px 0;
-  padding: 12px 15px;
-  border-radius: 6px;
-  font-size: 17px;
-  font-weight: 500;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, background-color 0.2s ease;
+li {
+    background-color: #e0e7ff;
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 14px; /* Set font size for list items */
 }
 
-li.step::before {
-  content: "✔";
-  color: #10b981;
-  margin-right: 10px;
-  font-weight: bold;
+li::before {
+    content: "✔";
+    color: #4caf50;
+    margin-right: 10px;
 }
 
-li.step:hover {
-  transform: scale(1.02);
-  background-color: #f3f4f6;
-}
-
-/* Color code each step */
-.step1 {
-  background-color: #ffe0e0;
-  border-left: 5px solid #ef4444;
-}
-.step2 {
-  background-color: #e0f7ff;
-  border-left: 5px solid #0ea5e9;
-}
-.step3 {
-  background-color: #e0ffe5;
-  border-left: 5px solid #22c55e;
-}
-.step4 {
-  background-color: #f5e0ff;
-  border-left: 5px solid #a855f7;
-}
-	</style>
+    </style>
 </body>
 </html>

@@ -7,22 +7,18 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	<title>Virtual Labs</title>
     <style>
-	    #instructions {
-		position: absolute;
-		top: 5px;
-		right: 135px;
-		}
         .container {
             display: flex;
 
         }
 		.left-half {
-            width: 35%;
+            width: 50%;
+            margin-left: 60px;
 			}
         .middle {
 		position: relative;
 		overflow: auto;
-            width: 35%;
+            width: 50%;
         }
         .right-half {
 
@@ -48,27 +44,41 @@
     </style>
 </head>
 <body>
-    <h1>BPSK Simulation (with AWGN + Rayleigh)</h1>
-	<br/>
-    <label for="snr" class="custom-text">Enter SNR value in dB:</label>
-    <input type="number" id="snr" value="0"><br>
+    <div id = "instructions">
+        <h1>Instructions</h1>
+    <ul>
+        <li class="step step1">Step 1: Click 'Generate Message', 'Generate Carrier', and 'Generate BPSK Signal' to generate the input, carrier, <br/>and the modulated signal, respectively</li>
+        <li class="step step2">Step 2: Click 'Generate Multi-path for Rayleigh' and 'ADD AWGN Noise' to simulate fading and add noise</li>
+        <li class="step step3">Step 3: Click 'See Received Signal' for demodulation</li>
+        <li class="step step4">Step 4: Click 'Received Signal without Rayleigh' to see the signal unaffected by Rayleigh Fading</li>
+        <li class="step step1">Step 5: Click 'Plot BER vs SNR' to compare BER with and without Rayleigh</li>
+    </ul>
+    </div>
+    <br/>
 
-    <label for="excessDelay" class="custom-text">Excess Delay (in ms):</label>
-    <input type="number" id="excessDelay" value="3"><br>
-
-    <label for="numTaps" class="custom-text">Enter the number of Multi-paths:</label>
-    <input type="number" id="numTaps" value="4" readonly><br>
+    <div  style = "margin-left: 30px;">
+        <h1>BASK Simulation (with AWGN + Rayleigh)</h1>
+        <br/>
+        <label for="snr" class="custom-text">Enter SNR value in dB:</label>
+        <input type="number" id="snr" value="0"><br>
     
-    <label for="bitRate" class="custom-text">Bit Rate (bps):</label>
-    <input type="number" id="bitRate" value="100" readonly>
-	
+        <label for="numTaps" class="custom-text">Enter the number of Multi-paths:</label>
+        <input type="number" id="numTaps" min = "1" value="4"><br>
+    
+        <label for="excessDelay" class="custom-text">Excess Delay (in ms):</label>
+        <input type="number" id="excessDelay" value="3"  readonly><br>
+        
+        <label for="bitRate" class="custom-text">Bit Rate (bps):</label>
+        <input type="number" id="bitRate" value="100" readonly>
+        
+        </div>
 	<br>
 <br/>
 
 
 
 <div class="container">
-    <div class="left-half">
+    <div class="left-half relative">
 	            <br/><br/>
                 <div class="w-[450px]">
                   <img
@@ -78,39 +88,39 @@
                   />
 
                 <button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[340px] left-[2px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[110px] left-[-20px]"
                   onclick="runSimulation()"
                 >
                   Generate Message
                 </button>
 				
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[380px] left-[2px]"
-                  onclick="generateCarrierSignal()()"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[150px] left-[-20px]"
+                  onclick="generateCarrierSignal()"
                 >
                   Generate Carrier
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[510px] left-[2px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[300px] left-[-20px]"
                   onclick="generatePSKModulatedSignal()"
                 >
                   Generate BPSK<br/>Signal
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[680px] left-[162px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[440px] left-[130px]"
                   onclick="generateChannelImpulseResponse()"
                 >
                   Generate Multi-path for Rayleigh
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[720px] left-[202px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[480px] left-[180px]"
                   onclick="generateNoisySignal()"
                 >
                   Add AWGN Noise
                 </button>
 					
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[180px] left-[380px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[180px] left-[400px]"
                   onclick="generateDemodulatedSignal()"
                 >
                   See Received Signal
@@ -121,12 +131,13 @@
                 >
                 Received Signal<br/>without Rayleigh
                 </button>
+                <a href = "./Effect_of_channel_bpsk_ber.html">
                 <button
-                  class="button bg-gray-500 text-white rounded-md px-2 py-1 relative top-[120px] right-[90px]"
-                  onclick="plotBERvsSNR()"
+                  class="button bg-gray-500 text-white rounded-md px-2 py-1 relative top-[120px] right-[120px]"
                 >
                 Plot BER vs SNR
                 </button>
+                </a>
                 </div>
 	</div>
     <div class="middle">
@@ -162,7 +173,7 @@
 			</div>
         </div>
     </div>
-    <div class="right-half">
+    <div class="right-half hidden">
 	<br/>
         <div id="berMessage"></div>
         <h2>BER vs SNR (AWGN + Rayleigh)</h2>
@@ -177,7 +188,7 @@
         </table>
         <div id="berVsSNR"></div>
     </div>
-	    <div class="right-half-ext">
+	    <div class="right-half-ext hidden">
 		<br/>
         <div id="berMessageSingleTap"></div>
         <h2>BER vs SNR (AWGN only)(without Rayleigh)</h2>
@@ -194,19 +205,6 @@
     </div>
 </div>
 
-<div id = "instructions">
-    <p  class="custom-text" style="color: red">Instructions</p>
-<ul>
-    <li>Step 1: Click 'Generate Message', 'Generate Carrier', and 'Generate BPSK Signal' to generate the input, carrier, <br/>and the modulated signal, respectively</li>
-    <li>Step 2: Click 'Generate Multi-path for Rayleigh' and 'ADD AWGN Noise' to simulate fading and add noise</li>
-    <li>Step 3: Click 'See Received Signal' for demodulation</li>
-    <li>Step 4: Click 'Received Signal without Rayleigh' to see the signal unaffected by Rayleigh Fading</li>
-    <li>Step 5: Click 'Plot BER vs SNR' to compare BER with and without Rayleigh</li>
-</ul>
-
-
-
-</div>
 	
     <script>
         let results = [];
@@ -283,11 +281,11 @@
         }
 
         function updateFields() {
-            const excessDelay = parseInt(document.getElementById("excessDelay").value) || 0;
-            document.getElementById("numTaps").value = excessDelay + 1;
+            const numTaps = parseInt(document.getElementById("numTaps").value) || 0;
+            document.getElementById("excessDelay").value = numTaps - 1;
         }
 
-        document.getElementById("excessDelay").addEventListener("input", updateFields);
+        document.getElementById("numTaps").addEventListener("input", updateFields);
 
        function runSimulation() {
             const EbN0dB = parseFloat(document.getElementById('snr').value);
@@ -662,35 +660,74 @@ h2,.custom-text {
   font-weight: 1000; /* font-medium */
 }
 
-h1 {
-  color: #2c99ce; /* text-[#2c99ce] */
-  font-weight: 1000; /* font-medium */
-  font-size: 30px;
-}
 
 #scrolltomessage, #scrolltocarrier, #scrolltomodulated, #scrolltoimpulse, #scrolltonoisy,
 #scrolltodemodulated, #scrolltowithoutrayleigh {
 display: none;
 }
 
+#container {
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 25px 40px;
+  max-width: 100%;
+  margin: 20px auto;
+  text-align: left;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h1 {
+  color: #1e3a8a;
+  font-size: 24px;
+  margin-bottom: 25px;
+  text-align: justify;
+}
+
 ul {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
-li {
-    background-color: #e0e7ff;
-    margin: 5px 0;
-    padding: 5px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 14px; /* Set font size for list items */
+li.step {
+  margin: 12px 0;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 17px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-li::before {
-    content: "✔";
-    color: #4caf50;
-    margin-right: 10px;
+li.step::before {
+  content: "✔";
+  color: #10b981;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+li.step:hover {
+  transform: scale(1.02);
+  background-color: #f3f4f6;
+}
+
+/* Color code each step */
+.step1 {
+  background-color: #ffe0e0;
+  border-left: 5px solid #ef4444;
+}
+.step2 {
+  background-color: #e0f7ff;
+  border-left: 5px solid #0ea5e9;
+}
+.step3 {
+  background-color: #e0ffe5;
+  border-left: 5px solid #22c55e;
+}
+.step4 {
+  background-color: #f5e0ff;
+  border-left: 5px solid #a855f7;
 }
 
     </style>

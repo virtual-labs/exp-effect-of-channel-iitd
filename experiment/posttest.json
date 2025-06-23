@@ -2,173 +2,173 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "Question 1: In a Rayleigh fading channel, what is the primary reason for the variation in the received signal's amplitude?",
+      "question": "Question 1: In a Rayleigh fading channel, what statistical property of the envelope causes deep signal fades?",
       "answers": {
-        "a": "The transmitter's power is inconsistent.",
-        "b": "Multipath propagation leading to constructive and destructive interference.",
-        "c": "The receiver's antenna is malfunctioning.",
-        "d": "The message signal is inherently unstable."
+        "a": "High average power of multipath components.",
+        "b": "Zero mean of the in-phase and quadrature components.",
+        "c": "Exponential decay of the amplitude envelope.",
+        "d": "Constant phase rotation across paths."
       },
       "explanations": {
-        "a": "The transmitter's power typically remains consistent; variations arise from the channel.",
-        "b": "Correct! Multipath propagation causes constructive and destructive interference in Rayleigh fading.",
-        "c": "A malfunctioning antenna does not account for the inherent characteristics of Rayleigh fading.",
-        "d": "The stability of the message signal is not related to the channel variations."
+        "a": "High power does not cause fades; it's the constructive/destructive combination.",
+        "b": "Correct! Zero mean Gaussian components result in Rayleigh-distributed amplitude, causing deep fades.",
+        "c": "This is more relevant in power-delay profiles, not envelope fading directly.",
+        "d": "Phase rotations vary randomly and cause fading, but not 'constant' ones."
       },
       "correctAnswer": "b",
       "difficulty": "hard"
     },
     {
-      "question": "Question 2: Which parameter is most crucial when analyzing the performance of a communication system under AWGN?",
+      "question": "Question 2: Why does higher-order modulation (like 64-QAM) suffer more in Rayleigh fading than lower-order schemes (like BPSK)?",
       "answers": {
-        "a": "The bandwidth of the communication channel.",
-        "b": "The modulation scheme used.",
-        "c": "The signal-to-noise ratio (SNR).",
-        "d": "The type of coding applied."
+        "a": "Because higher-order schemes require narrower bandwidths.",
+        "b": "Because symbol spacing is smaller, making them more error-prone during fades.",
+        "c": "Because they have lower average power.",
+        "d": "Because they introduce non-linearity into the channel."
       },
       "explanations": {
-        "a": "While bandwidth is important, SNR directly influences performance under AWGN.",
-        "b": "The modulation scheme does affect performance but is secondary to SNR in this context.",
-        "c": "Correct! The signal-to-noise ratio (SNR) is crucial in determining system performance in AWGN.",
-        "d": "Coding techniques are helpful but depend on SNR for effective performance."
+        "a": "Bandwidth is not the core issue in fading.",
+        "b": "Correct! Closer constellation points mean a small fade can easily cause incorrect demodulation.",
+        "c": "Power is normalized; spacing is the issue.",
+        "d": "Modulation schemes themselves don't cause non-linearity."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 3: How does a frequency-selective Rayleigh fading channel affect an OFDM system compared to a flat-fading channel?",
+      "answers": {
+        "a": "All subcarriers experience equal gain and phase shifts.",
+        "b": "Some subcarriers are severely attenuated while others are not.",
+        "c": "It has no significant impact because OFDM uses cyclic prefixes.",
+        "d": "It affects the bit duration rather than the frequency response."
+      },
+      "explanations": {
+        "a": "That describes flat fading.",
+        "b": "Correct! Frequency-selective fading leads to variation across subcarriers.",
+        "c": "Cyclic prefix prevents ISI but doesn't flatten the channel.",
+        "d": "Fading does not directly affect bit duration."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 4: In a high-mobility environment with severe Doppler spread, which design aspect is most affected?",
+      "answers": {
+        "a": "The peak-to-average power ratio (PAPR).",
+        "b": "The carrier frequency selection.",
+        "c": "The coherence time of the channel.",
+        "d": "The baseband signal bandwidth."
+      },
+      "explanations": {
+        "a": "PAPR is a concern in OFDM but unrelated to Doppler directly.",
+        "b": "Carrier frequency choice isn't significantly affected by Doppler spread.",
+        "c": "Correct! Doppler spread inversely affects coherence time, leading to fast fading.",
+        "d": "Bandwidth is not a direct consequence of mobility."
       },
       "correctAnswer": "c",
       "difficulty": "hard"
     },
     {
-      "question": "Question 3: What is the effect of increasing the transmission power in a Rayleigh fading environment?",
+      "question": "Question 5: How does increasing diversity order affect the cumulative distribution function (CDF) of received SNR in Rayleigh fading?",
       "answers": {
-        "a": "It has no effect on the received signal.",
-        "b": "It reduces the effects of fading but does not eliminate them.",
-        "c": "It guarantees perfect signal reception.",
-        "d": "It increases the likelihood of interference."
+        "a": "The CDF shifts left, indicating more outage probability.",
+        "b": "The CDF becomes more linear.",
+        "c": "The tail of the CDF becomes steeper, reducing probability of deep fades.",
+        "d": "The CDF becomes uniform."
       },
       "explanations": {
-        "a": "Increasing power will have an effect; it won't eliminate fading, however.",
-        "b": "Correct! Increasing transmission power helps mitigate fading effects but cannot fully eliminate them.",
-        "c": "There is no guarantee of perfect reception due to the nature of fading.",
-        "d": "Increasing power can indeed increase interference, depending on the environment."
+        "a": "Higher diversity reduces outage, not increases it.",
+        "b": "CDF doesn't become linear; it's still exponential-like.",
+        "c": "Correct! Diversity improves SNR statistics, making deep fades less likely.",
+        "d": "CDF cannot be uniform in fading channels."
       },
-      "correctAnswer": "b",
+      "correctAnswer": "c",
       "difficulty": "hard"
     },
     {
-      "question": "Question 4: How does the presence of multipath components in a Rayleigh fading channel influence the modulation scheme selection?",
+      "question": "Question 6: In a Rayleigh fading channel with AWGN, which metric most accurately predicts system reliability?",
       "answers": {
-        "a": "It favors modulation schemes that are more resilient to phase shifts.",
-        "b": "It necessitates the use of higher frequency modulation schemes.",
-        "c": "It has no impact on the choice of modulation schemes.",
-        "d": "It requires simpler modulation techniques only."
+        "a": "Instantaneous received power.",
+        "b": "Symbol energy to noise power spectral density ratio (Es/N0).",
+        "c": "Average signal-to-noise ratio (SNR).",
+        "d": "Outage probability at a target SNR threshold."
       },
       "explanations": {
-        "a": "Correct! Modulation schemes that handle phase shifts well, like QPSK, are preferred in multipath scenarios.",
-        "b": "Higher frequencies may introduce more fading effects, complicating modulation choices.",
-        "c": "Multipath components significantly impact modulation scheme performance.",
-        "d": "Simpler techniques may be inadequate in a multipath environment."
-      },
-      "correctAnswer": "a",
-      "difficulty": "hard"
-    },
-    {
-      "question": "Question 5: Which technique is often used to combat the effects of AWGN in digital communication systems?",
-      "answers": {
-        "a": "Increased bandwidth.",
-        "b": "Adaptive equalization.",
-        "c": "Higher modulation orders.",
-        "d": "Error correction coding."
-      },
-      "explanations": {
-        "a": "While increasing bandwidth can improve capacity, it doesn't combat noise directly.",
-        "b": "Adaptive equalization primarily addresses fading effects, not noise.",
-        "c": "Higher modulation orders increase the likelihood of errors in the presence of noise.",
-        "d": "Correct! Error correction coding helps recover the original message by mitigating the impact of AWGN."
+        "a": "Instantaneous power fluctuates and is not a reliable predictor.",
+        "b": "Es/N0 is useful, but doesn't account for fading variability.",
+        "c": "Average SNR alone doesn’t capture fading effects.",
+        "d": "Correct! Outage probability accounts for both fading and noise over time."
       },
       "correctAnswer": "d",
       "difficulty": "hard"
     },
     {
-      "question": "Question 6: What statistical model is often used to describe the behavior of signals in a Rayleigh fading channel?",
+      "question": "Question 7: When modeling a multipath Rayleigh fading channel, the autocorrelation function of the fading envelope depends on:",
       "answers": {
-        "a": "Normal distribution.",
-        "b": "Uniform distribution.",
-        "c": "Rayleigh distribution.",
-        "d": "Exponential distribution."
+        "a": "Modulation index and bit rate.",
+        "b": "Doppler spread and time separation.",
+        "c": "SNR and carrier-to-noise ratio.",
+        "d": "Delay spread and antenna gain."
       },
       "explanations": {
-        "a": "Normal distribution does not accurately describe Rayleigh fading effects.",
-        "b": "Uniform distribution does not capture the characteristics of fading.",
-        "c": "Correct! Rayleigh distribution models the amplitude of signals in a Rayleigh fading channel.",
-        "d": "Exponential distribution does not apply in this context."
+        "a": "These are modulation-related, not channel statistics.",
+        "b": "Correct! Doppler spread affects time correlation of fading.",
+        "c": "SNR affects error rates, not fading correlation.",
+        "d": "Delay spread affects frequency correlation, not autocorrelation over time."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 8: In an AWGN channel, which of the following pairs offers the best tradeoff between spectral efficiency and BER?",
+      "answers": {
+        "a": "BPSK with repetition coding.",
+        "b": "64-QAM with no coding.",
+        "c": "16-QAM with convolutional coding.",
+        "d": "QPSK with zero padding."
+      },
+      "explanations": {
+        "a": "Repetition coding drastically reduces spectral efficiency.",
+        "b": "High BER at low SNR without coding.",
+        "c": "Correct! 16-QAM balances high data rate and BER reduction via coding.",
+        "d": "Zero padding doesn't provide error resilience."
       },
       "correctAnswer": "c",
       "difficulty": "hard"
     },
     {
-      "question": "Question 7: In the context of AWGN, which factor directly influences the Bit Error Rate (BER)?",
+      "question": "Question 9: Which assumption is violated when Rayleigh fading is modeled as stationary over long intervals?",
       "answers": {
-        "a": "The distance between transmitter and receiver.",
-        "b": "The modulation technique employed.",
-        "c": "The encoding scheme used.",
-        "d": "All of the above."
+        "a": "The in-phase and quadrature components are Gaussian.",
+        "b": "The fading process has a constant Doppler spectrum.",
+        "c": "The signal experiences independent fading at each instant.",
+        "d": "The channel autocorrelation depends only on time difference."
       },
       "explanations": {
-        "a": "Distance can impact signal strength but is not a direct factor for BER with respect to AWGN.",
-        "b": "Correct! The modulation technique significantly affects BER under AWGN conditions.",
-        "c": "Encoding schemes can influence BER but not solely; they must work with modulation.",
-        "d": "While all these factors are important, the modulation technique is the most direct influence on BER under AWGN."
+        "a": "This assumption typically holds.",
+        "b": "Correct! Over long durations, mobility or scattering may vary, violating Doppler stationarity.",
+        "c": "Independence can still hold in fast fading with wide spacing.",
+        "d": "This defines wide-sense stationarity, which is often assumed for shorter intervals."
       },
       "correctAnswer": "b",
       "difficulty": "hard"
     },
     {
-      "question": "Question 8: What is the significance of the Doppler shift in a Rayleigh fading environment?",
+      "question": "Question 10: Which method enables coherent detection in Rayleigh fading when the channel state is not known at the receiver?",
       "answers": {
-        "a": "It stabilizes the received signal.",
-        "b": "It introduces frequency variations due to relative motion.",
-        "c": "It guarantees error-free communication.",
-        "d": "It simplifies the channel equalization process."
+        "a": "Minimum Euclidean distance decoding.",
+        "b": "Differential modulation (e.g., DPSK).",
+        "c": "Matched filtering.",
+        "d": "Zero-forcing equalization."
       },
       "explanations": {
-        "a": "Doppler shift does not stabilize; it introduces variability.",
-        "b": "Correct! Doppler shift causes frequency variations due to the relative motion between transmitter and receiver.",
-        "c": "Doppler shift does not ensure error-free communication.",
-        "d": "Doppler effects can complicate equalization, rather than simplify it."
+        "a": "Requires channel knowledge for accurate performance.",
+        "b": "Correct! Differential schemes allow decoding without knowing instantaneous phase.",
+        "c": "Matched filters require known channel impulse response.",
+        "d": "ZF equalizers need channel estimates to invert channel effects."
       },
       "correctAnswer": "b",
-      "difficulty": "hard"
-    },
-    {
-      "question": "Question 9: In practical systems, what is the typical approach to enhance performance in the presence of Rayleigh fading?",
-      "answers": {
-        "a": "Using single-input single-output (SISO) systems.",
-        "b": "Implementing diversity techniques.",
-        "c": "Opting for lower bandwidth channels.",
-        "d": "Exclusively using analog signals."
-      },
-      "explanations": {
-        "a": "SISO systems are more susceptible to fading; they do not enhance performance.",
-        "b": "Correct! Diversity techniques, like spatial diversity or frequency diversity, enhance performance in fading environments.",
-        "c": "Lower bandwidth does not inherently enhance performance against fading.",
-        "d": "Analog signals do not provide the necessary resilience against fading."
-      },
-      "correctAnswer": "b",
-      "difficulty": "hard"
-    },
-    {
-      "question": "Question 10: Which of the following statements about the effects of AWGN and Rayleigh fading is true?",
-      "answers": {
-        "a": "AWGN only affects the amplitude of the signal.",
-        "b": "Rayleigh fading can be completely mitigated with appropriate modulation.",
-        "c": "AWGN is predictable, while Rayleigh fading is inherently random.",
-        "d": "Both AWGN and Rayleigh fading have no impact on communication system design."
-      },
-      "explanations": {
-        "a": "AWGN affects both amplitude and signal integrity.",
-        "b": "Rayleigh fading cannot be completely mitigated; it requires techniques to manage.",
-        "c": "Correct! AWGN is predictable, whereas Rayleigh fading involves random variations.",
-        "d": "Both factors are crucial in communication system design, impacting performance and reliability."
-      },
-      "correctAnswer": "c",
       "difficulty": "hard"
     }
   ]
