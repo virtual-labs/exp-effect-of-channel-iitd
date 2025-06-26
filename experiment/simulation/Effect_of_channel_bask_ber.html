@@ -68,11 +68,17 @@
         
         <br/><br/>
         <button
-        class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute left -[90px]"
-        onclick="plotBERvsSNR()"
+        class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute left-[30px]"
+        onclick="runSimulation()"
       >
-      Calculate and Plot BER vs SNR
+      Calculate BER
       </button>
+      <button
+      class="button bg-blue-500 text-white rounded-md px-2 py-1 relative left-[130px]"
+      onclick="plotBERvsSNR()"
+        >
+        Plot BER vs. SNR
+        </button>
         </div>
 	
 	<br>
@@ -191,7 +197,7 @@
         </table>
         </div>
         <br/>
-        <button onclick="printDiv('div1')" class="bg-blue-500 text-white p-2 rounded-md">Print</button>
+
         <div id="berVsSNR"></div>
     </div>
 	    <div class="right-half-ext">
@@ -210,7 +216,7 @@
         </table>
     </div>
     <br/>
-    <button onclick="printDiv('div2')" class="bg-blue-500 text-white p-2 rounded-md">Print</button>
+
         <div id="berVsSNRSingleTap"></div>
     </div>
 </div>
@@ -487,7 +493,7 @@ function plotBERvsSNRSingleTap() {
         }
 
         function plotBERvsSNR() {
-            runSimulation();
+            //runSimulation();
             if (results.length === 0) {
                 alert('No results to plot.');
                 return;
