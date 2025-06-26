@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -47,17 +47,17 @@
     <div id = "instructions">
         <h1>Instructions</h1>
     <ul>
-        <li class="step step1">Step 1: Click 'Generate Message', 'Generate Carrier', and 'Generate BPSK Signal' to generate the input, carrier, <br/>and the modulated signal, respectively</li>
+        <li class="step step1">Step 1: Click 'Generate Message', 'Generate Carrier', and 'Generate BPSK Signal' to generate the input, a 20 Hz carrier, <br/>and the modulated signal, respectively</li>
         <li class="step step2">Step 2: Click 'Generate Multi-path for Rayleigh' and 'ADD AWGN Noise' to simulate fading and add noise</li>
-        <li class="step step3">Step 3: Click 'See Received Signal' for demodulation</li>
-        <li class="step step4">Step 4: Click 'Received Signal without Rayleigh' to see the signal unaffected by Rayleigh Fading</li>
+        <li class="step step3">Step 3: Click 'See Demodulated Signal' for demodulation</li>
+        <li class="step step4">Step 4: Click 'Demodulated Signal without Rayleigh' to see the signal unaffected by Rayleigh Fading</li>
         <li class="step step1">Step 5: Click 'Plot BER vs SNR' to compare BER with and without Rayleigh</li>
     </ul>
     </div>
     <br/>
 
     <div  style = "margin-left: 30px;">
-        <h1>BASK Simulation (with AWGN + Rayleigh)</h1>
+        <h1>BPSK Simulation (with AWGN + Rayleigh)</h1>
         <br/>
         <label for="snr" class="custom-text">Enter SNR value in dB:</label>
         <input type="number" id="snr" value="0"><br>
@@ -123,17 +123,17 @@
                   class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[180px] left-[400px]"
                   onclick="generateDemodulatedSignal()"
                 >
-                  See Received Signal
+                  See Demodulated Signal
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[240px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[220px]"
                   onclick="withoutRayleigh()"
                 >
-                Received Signal<br/>without Rayleigh
+                Demodulated Signal<br/>without Rayleigh
                 </button>
                 <a href = "./Effect_of_channel_bpsk_ber.html">
                 <button
-                  class="button bg-gray-500 text-white rounded-md px-2 py-1 relative top-[120px] right-[120px]"
+                  class="button bg-gray-500 text-white rounded-md px-2 py-1 relative top-[120px] left-[180px]"
                 >
                 Plot BER vs SNR
                 </button>
@@ -341,10 +341,10 @@
 			const upsampleddataHatSingleTap = upsampleSignal(dataHatSingleTap, U_sig);
 
             // Check for duplicate SNR value
-            if (results.some(result => result.snr === EbN0dB)) {
-                alert('SNR value already exists in the table.');
-                return;
-            }
+            //if (results.some(result => result.snr === EbN0dB)) {
+              //  alert('SNR value already exists in the table.');
+             //   return;
+            //}
 
             // Store results automatically
             results.push({ snr: EbN0dB, ber: berMultipath });
@@ -369,10 +369,19 @@
 				type: 'scatter'
 			};
 
+            const annotations = data.slice(0, 10).map((bit, index) => ({
+            x: index * (1 / 100),  // center of the pulse
+            y: 1.1,                      // a little above the bit value
+            text: bit.toString(),
+            showarrow: false,
+            font: { color: "black", size: 14 }
+            }));
+
 			Plotly.newPlot('transmittedSignal', [transmittedSignalTrace], {
 				title : "Original Message Signal",
 				xaxis: { title: 'Time (s)' },
-				yaxis: { title: 'Amplitude' }
+				yaxis: { title: 'Amplitude' },
+                annotations: annotations
 			});
 			
 			// Scroll to the plot area
@@ -467,10 +476,18 @@ function plotBERvsSNRSingleTap() {
 	            line: { color: 'blue', width: 4 },
                 type: 'scatter'
             };
+            const annotations = dataHat.slice(0, 10).map((bit, index) => ({
+            x: index * (1 / 100),  // center of the pulse
+            y: 1.1,                      // a little above the bit value
+            text: bit.toString(),
+            showarrow: false,
+            font: { color: "black", size: 14 }
+            }));
             Plotly.newPlot('demodulatedSignal', [demodulatedSignalTrace], {
-			    title : "Received Message Signal",
+			    title : "Demodulated Message Signal",
                 xaxis: { title: 'Time (s)' },
-                yaxis: { title: 'Amplitude' }
+                yaxis: { title: 'Amplitude' },
+                annotations: annotations
             });
 						// Scroll to the plot area
 
@@ -487,10 +504,18 @@ function plotBERvsSNRSingleTap() {
 			    line: { color: 'blue', width: 4 },
                 type: 'scatter'
             };
+            const annotations = dataHatSingleTap.slice(0, 10).map((bit, index) => ({
+            x: index * (1 / 100),  // center of the pulse
+            y: 1.1,                      // a little above the bit value
+            text: bit.toString(),
+            showarrow: false,
+            font: { color: "black", size: 14 }
+            }));
             Plotly.newPlot('withoutRayleigh', [withoutRayleighTrace], {
-			    title : "Received Message Signal (without Rayleigh)",
+			    title : "Demodulated Message Signal (without Rayleigh)",
                 xaxis: { title: 'Time (s)' },
-                yaxis: { title: 'Amplitude' }
+                yaxis: { title: 'Amplitude' },
+                annotations: annotations
             });
 						// Scroll to the plot area
 									document.getElementById('scrolltowithoutrayleigh').style.display = 'block';
@@ -593,11 +618,11 @@ function generatePSKModulatedSignal() {
                 y: carrier_signal,
                 type: "scatter",
                 mode: "lines",
-                name: "Carrier Signal",
+                name: "Carrier Signal (20 Hz)",
             }];
 
             const carrierLayout = {
-                title: "Carrier Signal",
+                title: "Carrier Signal (20 Hz)",
                 xaxis: { title: "Time (s)" },
                 yaxis: { title: "Amplitude" },
             };
