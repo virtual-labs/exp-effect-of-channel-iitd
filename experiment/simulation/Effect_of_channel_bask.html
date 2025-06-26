@@ -48,10 +48,10 @@
     <div id = "instructions">
         <h1>Instructions</h1>
     <ul>
-        <li class="step step1">Step 1: Click 'Generate Message', 'Generate Carrier', and 'Generate BASK Signal' to generate the input, carrier, and the modulated signal, respectively</li>
+        <li class="step step1">Step 1: Click 'Generate Message', 'Generate Carrier', and 'Generate BASK Signal' to generate the input, a 20 Hz carrier, and the modulated signal, respectively</li>
         <li class="step step2">Step 2: Click 'Generate Multi-path for Rayleigh' and 'ADD AWGN Noise' to simulate fading and add noise</li>
-        <li class="step step3">Step 3: Click 'See Received Signal' for demodulation</li>
-        <li class="step step4">Step 4: Click 'Received Signal without Rayleigh' to see the signal unaffected by Rayleigh Fading</li>
+        <li class="step step3">Step 3: Click 'See Demodulated Signal' for demodulation</li>
+        <li class="step step4">Step 4: Click 'Demodulated Signal without Rayleigh' to see the signal unaffected by Rayleigh Fading</li>
         <li class="step step1">Step 5: Click 'Plot BER vs SNR' to compare BER with and without Rayleigh</li>
     </ul>
     </div>
@@ -123,17 +123,17 @@
                   class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[180px] left-[400px]"
                   onclick="generateDemodulatedSignal()"
                 >
-                  Received Signal
+                  Demodulated Signal
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[270px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[235px]"
                   onclick="withoutRayleigh()"
                 >
-                Received Signal<br/>without Rayleigh
+                Demodulated Signal<br/>without Rayleigh
                 </button>
                 <a href = "./Effect_of_channel_bask_ber.html">
                 <button
-                  class="button bg-gray-500 text-white rounded-md px-2 py-1 relative top-[120px] right-[90px]"
+                  class="button bg-gray-500 text-white rounded-md px-2 py-1 relative top-[120px] left-[180px]"
                 >
                 Plot BER vs SNR
                 </button>
@@ -341,10 +341,10 @@
 
 
             // Check for duplicate SNR value
-            if (results.some(result => result.snr === EbN0dB)) {
-                alert('SNR value already exists in the table.');
-                return;
-            }
+            //if (results.some(result => result.snr === EbN0dB)) {
+             //   alert('SNR value already exists in the table.');
+            //    return;
+            //}
 
             // Store results automatically
             results.push({ snr: EbN0dB, ber: berMultipath });
@@ -368,10 +368,19 @@
 				type: 'scatter'
 			};
 
+            const annotations = data.slice(0, 10).map((bit, index) => ({
+            x: index * (1 / 100),  // center of the pulse
+            y: 1.1,                      // a little above the bit value
+            text: bit.toString(),
+            showarrow: false,
+            font: { color: "black", size: 14 }
+            }));
+
 			Plotly.newPlot('transmittedSignal', [transmittedSignalTrace], {
 				title : "Original Message Signal",
 				xaxis: { title: 'Time (s)' },
-				yaxis: { title: 'Amplitude' }
+				yaxis: { title: 'Amplitude' },
+                annotations: annotations
 			});
 
 			// Scroll to the plot area
@@ -494,7 +503,7 @@ function plotBERvsSNRSingleTap() {
             }];
 
             const carrierLayout = {
-                title: "Carrier Signal",
+                title: "Carrier Signal (20 Hz)",
                 xaxis: { title: "Time (s)" },
                 yaxis: { title: "Amplitude" },
             };
@@ -598,10 +607,20 @@ function generateASKModulatedSignal() {
 	            line: { color: 'blue', width: 4 },
                 type: 'scatter'
             };
+
+            const annotations = dataHat.slice(0, 10).map((bit, index) => ({
+            x: index * (1 / 100),  // center of the pulse
+            y: 1.1,                      // a little above the bit value
+            text: bit.toString(),
+            showarrow: false,
+            font: { color: "black", size: 14 }
+            }));
+
             Plotly.newPlot('demodulatedSignal', [demodulatedSignalTrace], {
-			    title : "Received Message Signal",
+			    title : "Demodulated Message Signal",
                 xaxis: { title: 'Time (s)' },
-                yaxis: { title: 'Amplitude' }
+                yaxis: { title: 'Amplitude' },
+                annotations: annotations
             });
 						// Scroll to the plot area
 
@@ -618,10 +637,18 @@ function generateASKModulatedSignal() {
 			    line: { color: 'blue', width: 4 },
                 type: 'scatter'
             };
+            const annotations = dataHatSingleTap.slice(0, 10).map((bit, index) => ({
+            x: index * (1 / 100),  // center of the pulse
+            y: 1.1,                      // a little above the bit value
+            text: bit.toString(),
+            showarrow: false,
+            font: { color: "black", size: 14 }
+            }));
             Plotly.newPlot('withoutRayleigh', [withoutRayleighTrace], {
-			    title : "Received Message Signal (without Rayleigh)",
+			    title : "Demodulated Message Signal (without Rayleigh)",
                 xaxis: { title: 'Time (s)' },
-                yaxis: { title: 'Amplitude' }
+                yaxis: { title: 'Amplitude' },
+                annotations: annotations
             });
 						// Scroll to the plot area
 									document.getElementById('scrolltowithoutrayleigh').style.display = 'block';
