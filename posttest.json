@@ -1,0 +1,175 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "Question 1: In a Rayleigh fading channel, what statistical property of the envelope causes deep signal fades?",
+      "answers": {
+        "a": "High average power of multipath components.",
+        "b": "Zero mean of the in-phase and quadrature components.",
+        "c": "Exponential decay of the amplitude envelope.",
+        "d": "Constant phase rotation across paths."
+      },
+      "explanations": {
+        "a": "High power does not cause fades; it's the constructive/destructive combination.",
+        "b": "Correct! Zero mean Gaussian components result in Rayleigh-distributed amplitude, causing deep fades.",
+        "c": "This is more relevant in power-delay profiles, not envelope fading directly.",
+        "d": "Phase rotations vary randomly and cause fading, but not 'constant' ones."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 2: Why does higher-order modulation (like 64-QAM) suffer more in Rayleigh fading than lower-order schemes (like BPSK)?",
+      "answers": {
+        "a": "Because higher-order schemes require narrower bandwidths.",
+        "b": "Because symbol spacing is smaller, making them more error-prone during fades.",
+        "c": "Because they have lower average power.",
+        "d": "Because they introduce non-linearity into the channel."
+      },
+      "explanations": {
+        "a": "Bandwidth is not the core issue in fading.",
+        "b": "Correct! Closer constellation points mean a small fade can easily cause incorrect demodulation.",
+        "c": "Power is normalized; spacing is the issue.",
+        "d": "Modulation schemes themselves don't cause non-linearity."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 3: How does a frequency-selective Rayleigh fading channel affect an OFDM system compared to a flat-fading channel?",
+      "answers": {
+        "a": "All subcarriers experience equal gain and phase shifts.",
+        "b": "Some subcarriers are severely attenuated while others are not.",
+        "c": "It has no significant impact because OFDM uses cyclic prefixes.",
+        "d": "It affects the bit duration rather than the frequency response."
+      },
+      "explanations": {
+        "a": "That describes flat fading.",
+        "b": "Correct! Frequency-selective fading leads to variation across subcarriers.",
+        "c": "Cyclic prefix prevents ISI but doesn't flatten the channel.",
+        "d": "Fading does not directly affect bit duration."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 4: In a high-mobility environment with severe Doppler spread, which design aspect is most affected?",
+      "answers": {
+        "a": "The peak-to-average power ratio (PAPR).",
+        "b": "The carrier frequency selection.",
+        "c": "The coherence time of the channel.",
+        "d": "The baseband signal bandwidth."
+      },
+      "explanations": {
+        "a": "PAPR is a concern in OFDM but unrelated to Doppler directly.",
+        "b": "Carrier frequency choice isn't significantly affected by Doppler spread.",
+        "c": "Correct! Doppler spread inversely affects coherence time, leading to fast fading.",
+        "d": "Bandwidth is not a direct consequence of mobility."
+      },
+      "correctAnswer": "c",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 5: How does increasing diversity order affect the cumulative distribution function (CDF) of received SNR in Rayleigh fading?",
+      "answers": {
+        "a": "The CDF shifts left, indicating more outage probability.",
+        "b": "The CDF becomes more linear.",
+        "c": "The tail of the CDF becomes steeper, reducing probability of deep fades.",
+        "d": "The CDF becomes uniform."
+      },
+      "explanations": {
+        "a": "Higher diversity reduces outage, not increases it.",
+        "b": "CDF doesn't become linear; it's still exponential-like.",
+        "c": "Correct! Diversity improves SNR statistics, making deep fades less likely.",
+        "d": "CDF cannot be uniform in fading channels."
+      },
+      "correctAnswer": "c",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 6: In a Rayleigh fading channel with AWGN, which metric most accurately predicts system reliability?",
+      "answers": {
+        "a": "Instantaneous received power.",
+        "b": "Symbol energy to noise power spectral density ratio (Es/N0).",
+        "c": "Average signal-to-noise ratio (SNR).",
+        "d": "Outage probability at a target SNR threshold."
+      },
+      "explanations": {
+        "a": "Instantaneous power fluctuates and is not a reliable predictor.",
+        "b": "Es/N0 is useful, but doesn't account for fading variability.",
+        "c": "Average SNR alone doesn’t capture fading effects.",
+        "d": "Correct! Outage probability accounts for both fading and noise over time."
+      },
+      "correctAnswer": "d",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 7: When modeling a multipath Rayleigh fading channel, the autocorrelation function of the fading envelope depends on:",
+      "answers": {
+        "a": "Modulation index and bit rate.",
+        "b": "Doppler spread and time separation.",
+        "c": "SNR and carrier-to-noise ratio.",
+        "d": "Delay spread and antenna gain."
+      },
+      "explanations": {
+        "a": "These are modulation-related, not channel statistics.",
+        "b": "Correct! Doppler spread affects time correlation of fading.",
+        "c": "SNR affects error rates, not fading correlation.",
+        "d": "Delay spread affects frequency correlation, not autocorrelation over time."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 8: In an AWGN channel, which of the following pairs offers the best tradeoff between spectral efficiency and BER?",
+      "answers": {
+        "a": "BPSK with repetition coding.",
+        "b": "64-QAM with no coding.",
+        "c": "16-QAM with convolutional coding.",
+        "d": "QPSK with zero padding."
+      },
+      "explanations": {
+        "a": "Repetition coding drastically reduces spectral efficiency.",
+        "b": "High BER at low SNR without coding.",
+        "c": "Correct! 16-QAM balances high data rate and BER reduction via coding.",
+        "d": "Zero padding doesn't provide error resilience."
+      },
+      "correctAnswer": "c",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 9: Which assumption is violated when Rayleigh fading is modeled as stationary over long intervals?",
+      "answers": {
+        "a": "The in-phase and quadrature components are Gaussian.",
+        "b": "The fading process has a constant Doppler spectrum.",
+        "c": "The signal experiences independent fading at each instant.",
+        "d": "The channel autocorrelation depends only on time difference."
+      },
+      "explanations": {
+        "a": "This assumption typically holds.",
+        "b": "Correct! Over long durations, mobility or scattering may vary, violating Doppler stationarity.",
+        "c": "Independence can still hold in fast fading with wide spacing.",
+        "d": "This defines wide-sense stationarity, which is often assumed for shorter intervals."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Question 10: Which method enables coherent detection in Rayleigh fading when the channel state is not known at the receiver?",
+      "answers": {
+        "a": "Minimum Euclidean distance decoding.",
+        "b": "Differential modulation (e.g., DPSK).",
+        "c": "Matched filtering.",
+        "d": "Zero-forcing equalization."
+      },
+      "explanations": {
+        "a": "Requires channel knowledge for accurate performance.",
+        "b": "Correct! Differential schemes allow decoding without knowing instantaneous phase.",
+        "c": "Matched filters require known channel impulse response.",
+        "d": "ZF equalizers need channel estimates to invert channel effects."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    }
+  ]
+}

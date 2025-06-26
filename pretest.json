@@ -1,0 +1,175 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "1. In a Rayleigh fading channel, which of the following strategies best mitigates deep fades without increasing transmit power?",
+      "answers": {
+        "a": "Switching to high-order QAM.",
+        "b": "Implementing time diversity techniques.",
+        "c": "Reducing symbol rate.",
+        "d": "Using narrowband signals."
+      },
+      "explanations": {
+        "a": "High-order QAM is more susceptible to fading, not a mitigation.",
+        "b": "Correct! Time diversity, like interleaving and retransmission, helps combat deep fades.",
+        "c": "Reducing symbol rate does not specifically address fading.",
+        "d": "Narrowband signals are more affected by fading due to less frequency diversity."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "2. Which mathematical distribution best models the amplitude of a received signal in a Rayleigh fading environment without a line-of-sight (LoS) path?",
+      "answers": {
+        "a": "Gaussian distribution",
+        "b": "Rayleigh distribution",
+        "c": "Rician distribution",
+        "d": "Poisson distribution"
+      },
+      "explanations": {
+        "a": "Gaussian models the in-phase and quadrature components, not amplitude.",
+        "b": "Correct! The Rayleigh distribution models the magnitude in non-LoS multipath environments.",
+        "c": "Rician is used when a LoS component is present.",
+        "d": "Poisson is irrelevant in modeling amplitude in this context."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "3. When AWGN is added to a Rayleigh fading channel, what combined impact does it have on BER performance?",
+      "answers": {
+        "a": "It significantly improves BER performance.",
+        "b": "It results in a double-logarithmic BER increase.",
+        "c": "It causes a rapid BER degradation, especially at low SNR.",
+        "d": "It has negligible effect due to fading dominating."
+      },
+      "explanations": {
+        "a": "Noise doesn't improve BER.",
+        "b": "This is not a typical BER-SNR relationship in fading channels.",
+        "c": "Correct! The combined effect of fading and noise causes steep BER degradation.",
+        "d": "AWGN contributes significantly to degradation, especially at low SNR."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "4. Which diversity technique specifically targets the frequency-selective nature of multipath fading?",
+      "answers": {
+        "a": "Time diversity",
+        "b": "Spatial diversity",
+        "c": "Frequency diversity",
+        "d": "Polarization diversity"
+      },
+      "explanations": {
+        "a": "Time diversity combats temporal fading.",
+        "b": "Spatial diversity uses multiple antennas but may not resolve frequency-selective fading.",
+        "c": "Correct! Frequency diversity exploits channel variations across frequency bands.",
+        "d": "Polarization diversity helps in spatial channels but not directly in frequency selectivity."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "5. In an OFDM system under Rayleigh fading and AWGN, which of the following improves robustness without bandwidth expansion?",
+      "answers": {
+        "a": "Increasing subcarrier spacing",
+        "b": "Applying forward error correction and interleaving",
+        "c": "Using fewer subcarriers",
+        "d": "Lowering modulation order on each subcarrier"
+      },
+      "explanations": {
+        "a": "This may reduce multipath resilience.",
+        "b": "Correct! FEC with interleaving spreads errors over time/frequency for better recovery.",
+        "c": "This reduces spectral efficiency and doesn't directly improve robustness.",
+        "d": "This helps, but it's not the most efficient way without bandwidth expansion."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "6. Under a Rayleigh fading model, what is the expected value of the instantaneous SNR compared to the average SNR?",
+      "answers": {
+        "a": "Always equal",
+        "b": "Greater than average",
+        "c": "Less than average",
+        "d": "It fluctuates around the average"
+      },
+      "explanations": {
+        "a": "Instantaneous SNR varies due to fading.",
+        "b": "Only occasionally greater due to constructive interference.",
+        "c": "Not always true; it can also be greater.",
+        "d": "Correct! Instantaneous SNR fluctuates around the average due to the stochastic nature of fading."
+      },
+      "correctAnswer": "d",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "7. How does the Doppler shift influence Rayleigh fading in mobile scenarios?",
+      "answers": {
+        "a": "It reduces the fading depth.",
+        "b": "It causes time-selective fading patterns.",
+        "c": "It increases the SNR consistently.",
+        "d": "It converts Rayleigh fading to Rician fading."
+      },
+      "explanations": {
+        "a": "Doppler shift does not reduce fading depth.",
+        "b": "Correct! Doppler shift causes rapid changes in channel coefficients over time.",
+        "c": "SNR may fluctuate but not consistently increase.",
+        "d": "Fading type depends on presence of LoS, not Doppler shift."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "8. In a system affected by both AWGN and Rayleigh fading, which decoding technique best improves BER without changing transmitter design?",
+      "answers": {
+        "a": "Matched filtering",
+        "b": "Hard decision decoding",
+        "c": "Soft decision decoding with Viterbi algorithm",
+        "d": "Simple energy detection"
+      },
+      "explanations": {
+        "a": "Helps with noise, but not optimal for fading.",
+        "b": "Hard decisions discard valuable soft information.",
+        "c": "Correct! Soft decision Viterbi decoding improves BER by leveraging probabilistic information.",
+        "d": "Energy detection is used in non-coherent detection and has limited performance."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "9. Why does Rayleigh fading typically result in higher BER compared to AWGN-only channels at the same SNR?",
+      "answers": {
+        "a": "Because the channel bandwidth is lower.",
+        "b": "Because fading introduces deep nulls where signal strength drops drastically.",
+        "c": "Because Rayleigh fading channels are always non-linear.",
+        "d": "Because phase distortion is completely absent."
+      },
+      "explanations": {
+        "a": "Bandwidth is not necessarily lower in fading channels.",
+        "b": "Correct! Deep fades can drop signal power close to zero, increasing BER even at same average SNR.",
+        "c": "Rayleigh fading channels are linear but time-varying.",
+        "d": "Phase distortion is often present and significant."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "10. Which metric best characterizes the severity of Rayleigh fading in a wireless channel?",
+      "answers": {
+        "a": "Average received power",
+        "b": "Bit Error Rate",
+        "c": "Doppler spread",
+        "d": "Fading margin"
+      },
+      "explanations": {
+        "a": "Does not reflect fading severity by itself.",
+        "b": "BER is an outcome, not a direct fading metric.",
+        "c": "Correct! Doppler spread indicates the rate of channel variation and fading severity.",
+        "d": "Fading margin helps design but doesn't measure severity directly."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    }
+  ]
+}
