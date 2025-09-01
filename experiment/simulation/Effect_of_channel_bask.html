@@ -48,10 +48,13 @@
     <div id = "instructions">
         <h1>Instructions for BASK Simulation (with AWGN + Rayleigh)</h1>
     <ul>
-        <li class="step step1">Step 1: Click 'Generate Message', 'Generate Carrier', and 'Generate BASK Signal' to generate the input, a 20 Hz carrier, and the modulated signal, respectively</li>
-        <li class="step step2">Step 2: Click 'Generate Multi-path for Rayleigh' and 'ADD AWGN Noise' to simulate fading and add noise</li>
+      <li class="step step4"><strong>Note:</strong> Use the input fields to enter the SNR (in dB), number of multi-paths, excess delay (in ms), bit rate (in bps), and the symbol duration (in ms)</li>
 
-        <li class="step step1">Step 3: Click 'Plot BER vs SNR' to compare BER with and without Rayleigh</li>
+        <li class="step step1"><strong>Step 1:</strong> Click <em>'Generate BASK Message'</em> to generate the input BASK modulated signal</li>
+        <li class="step step2"><strong>Step 2 & 3:</strong> Click <em>'Generate Multi-path for Rayleigh'</em> and <em>'ADD AWGN Noise'</em> to simulate fading and add noise</li>
+        <li class="step step3"><strong>Step 4:</strong> Click <em>'LTI Output'</em> to generate the output after convolution with the channel</li>            
+
+        <li class="step step1"><strong>Step 5:</strong> Click <em>'Plot BER vs SNR'</em> to compare BER with and without Rayleigh fading</li>
     </ul>
     </div>
     <br/>
@@ -223,6 +226,9 @@
 </div>
 
 <!------------------------------------------------------------------------->
+
+<div id = "demodulation">
+
 <br/></br><br/></br>
 <div>
     <h1>Instructions for BASK Demodulation Simulation (with AWGN + Rayleigh)</h1>
@@ -235,7 +241,6 @@
 <div  style = "margin-left: 30px;">
 <h1>BASK Demodulation Simulation (with AWGN + Rayleigh)</h1>
 <br/>
-
 
 
 
@@ -280,6 +285,8 @@
         </div>
     </div>
 </div>
+</div>
+
 </div>
 
     <script>
@@ -915,9 +922,25 @@ Plotly.newPlot('noisy-plot', [convolvedSignalTrace], {
 
 			document.getElementById('scrolltonoisy').style.display = 'block';
 			            document.getElementById('scrolltonoisy').scrollIntoView({ behavior: 'smooth' });
+
+      saveData();
         }
+
+
+        function saveData() {
+
+// Store as an object (use the variables you actually defined)
+const myData = { dataHat: dataHat, dataHatSingleTap: dataHatSingleTap };
+
+localStorage.setItem('sharedData', JSON.stringify(myData));
+}
+
     </script>
 		    <style>
+
+          #demodulation {
+            display: none;
+          }
 		/* Style for input field */
 input {
   margin-left: 10px; /* max-lg:ml-10 equivalent */
