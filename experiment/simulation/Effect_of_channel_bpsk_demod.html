@@ -44,6 +44,9 @@
     </style>
 </head>
 <body>
+
+  <div id = "modulation">
+
     <div id = "instructions">
         <h1>Instructions for BPSK Simulation (with AWGN + Rayleigh)</h1>
         <ul>
@@ -225,10 +228,9 @@
 </div>
 
 <!------------------------------------------------------------------------->
-
-<div id = "demodulation">
-  
 <br/></br><br/></br>
+</div>  </div>
+
 <div>
     <h1>Instructions for BPSK Demodulation Simulation (with AWGN + Rayleigh)</h1>
 <ul>
@@ -240,6 +242,8 @@
 <div  style = "margin-left: 30px;">
 <h1>BASK Demodulation Simulation (with AWGN + Rayleigh)</h1>
 <br/>
+
+
 
 
 <div class="container">
@@ -283,8 +287,6 @@
         </div>
     </div>
 </div>
-</div>
-
 </div>
 	
     <script>
@@ -897,23 +899,29 @@ Plotly.newPlot('noisy-plot', [convolvedSignalTrace], {
 
 			document.getElementById('scrolltonoisy').style.display = 'block';
 			            document.getElementById('scrolltonoisy').scrollIntoView({ behavior: 'smooth' });
-
-        saveData();
         }
 
 
+        function loadData() {
+  const data = localStorage.getItem('sharedData');
+  if (data) {
+    const parsed = JSON.parse(data);
 
-        function saveData() {
-
-// Store as an object (use the variables you actually defined)
-const myData = { dataHat: dataHat, dataHatSingleTap: dataHatSingleTap };
-
-localStorage.setItem('sharedData', JSON.stringify(myData));
+    // Update input fields in current tab
+	
+	dataHat = parsed.dataHat ?? null;
+        dataHatSingleTap = parsed.dataHatSingleTap ?? null;
+  }
 }
 
+// Load immediately
+loadData();
+
+// Update if storage changes (works across tabs)
+window.addEventListener('storage', loadData);   
     </script>
 		    <style>
-                    #demodulation {
+          #modulation {
             display: none;
           }
 		/* Style for input field */
