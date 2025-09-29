@@ -50,8 +50,9 @@
           <li class="step step4"><strong>Note:</strong> Use the input fields to enter the SNR (in dB), number of multi-paths, excess delay (in ms), bit rate (in bps), and the symbol duration (in ms)</li>
     
             <li class="step step1"><strong>Step 1:</strong> Click <em>'Generate BPSK Message'</em> to generate the input BPSK modulated signal</li>
-            <li class="step step2"><strong>Step 2 & 3:</strong> Click <em>'Generate Multi-path for Rayleigh'</em> and <em>'ADD AWGN Noise'</em> to simulate fading and add noise</li>
-            <li class="step step3"><strong>Step 4:</strong> Click <em>'LTI Output'</em> to generate the output after convolution with the channel</li>            
+            <li class="step step2"><strong>Step 2:</strong> Click <em>'Generate Multi-path for Rayleigh'</em> to plot the Channel Impulse Response (CIR) for the Rayleigh fading channel</li>
+            <li class="step step3"><strong>Step 3:</strong> Click <em>'LTI Output'</em> to generate the output after convolution with the channel</li>        
+            <li class="step step2"><strong>Step 4:</strong> Click <em>'ADD AWGN Noise'</em> to add AWGN noise</li>   
             <li class="step step1"><strong>Step 5:</strong> Click <em>'Plot BER vs SNR'</em> to compare BER with and without Rayleigh fading</li>
         </ul>
     </div>
@@ -224,6 +225,15 @@
     </div>
 </div>
 
+<div align = "center">
+  <a href = ".\Effect_of_channel_bpsk_demod.html">
+  <button
+  class="bg-blue-500 text-white py-1 px-3  rounded-md hover:scale-105"
+>
+  Perform Demodulation
+</button>
+</a>
+</div>
 <!------------------------------------------------------------------------->
 
 <div id = "demodulation">
@@ -819,6 +829,7 @@ Plotly.newPlot('convolutionPlot', [convolvedSignalTrace], {
 document.getElementById('scrolltoconvolutionPlot').scrollIntoView({ behavior: 'smooth' });
     }    
 
+    let convolvedSignalTrace;
     function generateNoisySignalff() {
 
 			const EbN0dB = parseFloat(document.getElementById('snr').value);
@@ -868,7 +879,7 @@ document.getElementById('scrolltoconvolutionPlot').scrollIntoView({ behavior: 's
 
 
     // Plot convolved output
-    const convolvedSignalTrace = {
+    convolvedSignalTrace = {
   x: convTime.slice(0, 100).flatMap(t => [t/100, t/100, null]),
   y: yNoisy.slice(0, 100).flatMap(val => [0, val, null]),
   mode: 'lines',
@@ -906,7 +917,7 @@ Plotly.newPlot('noisy-plot', [convolvedSignalTrace], {
         function saveData() {
 
 // Store as an object (use the variables you actually defined)
-const myData = { dataHat: dataHat, dataHatSingleTap: dataHatSingleTap };
+const myData = { dataHat: dataHat, dataHatSingleTap: dataHatSingleTap, convolvedSignalTrace: convolvedSignalTrace };
 
 localStorage.setItem('sharedData', JSON.stringify(myData));
 }

@@ -249,6 +249,12 @@
 <div class="left-half relative">
             <br/><br/>
             <div class="w-[450px]">
+              <button
+              onclick="Input();"
+              class="bg-blue-500 text-white py-1 px-3 mt-1 rounded-md hover:bg-[#0c9c0c] hover:scale-105"
+            >
+              Input
+            </button>
               <img
                 src="rayleighfading.png"
                 alt="Rayleigh Fading"
@@ -274,6 +280,7 @@
 <div class="middle">
     <br/><br/>
     <div class="flex flex-1 flex-col justify-center items-center">
+        <div class="max-h-[400px] max-w-[500px]" id="Input"></div>
         <div id = "scrolltodemodulated" align = "center">
         <div class="max-h-[400px] max-w-[500px]" id="demodulatedSignal"></div>
 
@@ -924,6 +931,23 @@ Plotly.newPlot('noisy-plot', [convolvedSignalTrace], {
         }
 
 
+function Input() {
+  Plotly.newPlot('Input', [convolvedSignalTrace], {
+  title: 'Noisy Signal',
+  xaxis: { title: 'Time (ms)' },
+  yaxis: { title: 'Amplitude' },
+  //annotations: convAnnotations
+});
+
+
+// Scroll to the PAM chart after it has been generated
+document.getElementById("Input").scrollIntoView({
+behavior: "smooth",
+block: "center"
+});
+
+}
+
         function loadData() {
   const data = localStorage.getItem('sharedData');
   if (data) {
@@ -933,6 +957,7 @@ Plotly.newPlot('noisy-plot', [convolvedSignalTrace], {
 	
 	dataHat = parsed.dataHat ?? null;
         dataHatSingleTap = parsed.dataHatSingleTap ?? null;
+        convolvedSignalTrace = parsed.convolvedSignalTrace ?? null;
   }
 }
 
