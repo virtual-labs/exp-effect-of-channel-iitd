@@ -94,7 +94,7 @@
 
                 <button
                   class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[110px] left-[-20px]"
-                  onclick="runSimulation1()"
+                  onclick="runSimulation()"
                 >
                   Generate BASK <br/> Message
                 </button>
@@ -305,14 +305,12 @@
         let data = [];
 		let modulated_signal = [];
 		let m = []; // Modulated signal
-    let txSignal;
 		let EbN0dB = 0;
 		let excessDelay = 0;
 		let h = [];
 		let dataHat = [];
 		let dataHatSingleTap = [];
 		let upsampledSignal = [];
-    let transmittedSignalTrace;
 
         function modulateBASK(data) {
             return data.map(bit => bit);
@@ -385,11 +383,6 @@ function addAWGN(txSignal, EbN0dB) {
 
         document.getElementById("numTaps").addEventListener("input", updateFields);
 
-        function runSimulation1 () {
-        runSimulation();
-        generateASKModulatedSignal();
-        }
-
         function runSimulation() {
             const EbN0dB = parseFloat(document.getElementById('snr').value);
             const numTaps = parseInt(document.getElementById('numTaps').value);
@@ -405,7 +398,6 @@ function addAWGN(txSignal, EbN0dB) {
             const delays = Array.from({ length: numTaps }, (_, i) => i);
             h = delays.map(d => 0.8 * Math.exp(-d / (numTaps / 2)));
             h = h.map(v => v / Math.sqrt(h.reduce((acc, x) => acc + x * x, 0)));
-            
 
             // Generate random binary data
             data = Array.from({ length: N_total }, () => Math.floor(Math.random() * 2));
@@ -418,7 +410,7 @@ function addAWGN(txSignal, EbN0dB) {
             upsampledSignal = upsampleSignal(BASKMod, U_sig);
 
             // Transmit signal through the channel
-            txSignal = manualConv(upsampledSignal, h);
+            const txSignal = manualConv(upsampledSignal, h);
             // Generate and add AWGN noise
             const rxSignal = addAWGN(txSignal, EbN0dB);
 
@@ -463,7 +455,6 @@ function addAWGN(txSignal, EbN0dB) {
            // Update the content of the div using innerHTML
            document.getElementById('berMessage').innerHTML = message;
 	
-/*
            const transmittedSignalTrace = {
   x: Array.from({ length: 10 }, (_, i) => i / 100).flatMap(i => [i, i, null]),
   y: data.slice(0, 10).flatMap(y => [0, y, null]),
@@ -487,53 +478,6 @@ Plotly.newPlot('transmittedSignal', [transmittedSignalTrace],  {
   yaxis: { title: 'Amplitude' },
   annotations: annotations
 });
-*/
-
-// Number of bits to plot
-const bitsToPlot = 10;
-
-// Time per bit (adjust as needed for spacing)
-const bitDuration = 1 / 100; // e.g., 0.1 seconds per bit
-
-// Generate time and value arrays for step-like pulse
-const x = [];
-const y = [];
-
-for (let i = 0; i < bitsToPlot; i++) {
-    const t0 = i * bitDuration;
-    const t1 = (i + 1) * bitDuration;
-    const bit = data[i];
-
-    x.push(t0, t1);
-    y.push(bit, bit);
-}
-
-// Create trace for digital pulse waveform
-transmittedSignalTrace = {
-    x: x,
-    y: y,
-    mode: 'lines',
-    line: { color: 'blue', width: 2 },
-    type: 'scatter',
-    name: 'Original Message Signal'
-};
-
-// Annotations for each bit
-const annotations = data.slice(0, bitsToPlot).map((bit, index) => ({
-    x: index * bitDuration + bitDuration / 2,
-    y: 1.1,
-    text: bit.toString(),
-    showarrow: false,
-    font: { color: "black", size: 14 }
-}));
-
-// Plot using Plotly
-Plotly.newPlot('transmittedSignal', [transmittedSignalTrace], {
-    title: "Original Message Signal",
-    xaxis: { title: 'Time (s)', range: [0, bitsToPlot * bitDuration] },
-    yaxis: { title: 'Amplitude' },
-    annotations: annotations
-});
 
 
 			// Scroll to the plot area
@@ -553,7 +497,6 @@ function updateResultsTableSingleTap() {
         row.insertCell(0).innerText = result.snr;
         row.insertCell(1).innerText = result.ber.toExponential(2);
     });
-
 }
 
 
@@ -733,7 +676,7 @@ function generateASKModulatedSignal() {
 		function generateChannelImpulseResponse() {
 		            // Display impulse response and other plots
             const impulseResponseTrace = {
-                x: h.flatMap((_, i) => [i/1000, i/1000, null]),
+                x: h.flatMap((_, i) => [i, i, null]),
                 y: h.flatMap(y => [0, y, null]),
                 mode: 'lines',
                 line: { color: 'blue', width: 4 },
@@ -742,7 +685,7 @@ function generateASKModulatedSignal() {
 
             const layout = {
 			    title: "Channel Impulse Response",
-                xaxis: { title: 'Time (s)' },
+                xaxis: { title: 'Time (ms)' },
                 yaxis: { title: 'Channel Gain' }
             };
 
@@ -813,7 +756,7 @@ function generateASKModulatedSignal() {
 		    function generateNoisySignal() {
 		    const Fs = 1000;
 			const EbN0dB = parseFloat(document.getElementById('snr').value);
-            const noisy_signal = addAWGN(convSignal, EbN0dB);
+            const noisy_signal = addAWGN(modulated_signal, EbN0dB);
             const NoisySignal = [{
                 x: Array.from({ length: noisy_signal.length }, (_, i) => (i / Fs/10)),
                 y: noisy_signal.slice(0,1000),
@@ -836,85 +779,170 @@ function generateASKModulatedSignal() {
         }
 
     
-        let convSignal, convolvedSignalTrace;
-function LTIOutput() {
-    const Fs = 1000;  // Sampling frequency in Hz
-    const dt = 1 / Fs; // Time step in seconds
 
-    // Ensure modulated_signal is defined globally or passed in
-    convSignal = manualConv(modulated_signal, h);
+        function LTIOutput() {
+            // Original message signal (every 10 ms)
+    const message = data.slice(0,10);
+    //const h = [1, 0.8]; // channel impulse response (1 ms spacing)
 
-    // Generate time vector in seconds for plotting
-    const timeVector = Array.from({ length: convSignal.length }, (_, i) => (i * dt/100));  // in seconds
+    // Upsample message to 1 ms spacing (insert 9 zeros between)
+    const upsampleFactor = 10;
+    const messageUpsampled = [];
 
-    convolvedSignalTrace = [{
-        x: timeVector,
-        y: convSignal,
-        type: "scatter",
-        mode: "lines",
-        name: "Channel Output",
-        line: { color: 'green', width: 2 }
-    }];
-
-    Plotly.newPlot('convolutionPlot', convolvedSignalTrace, {
-        title: 'Output after Convolution with Channel',
-        xaxis: { title: 'Time (s)' },  // changed from 'Time (ms)' to 'Time (s)'
-        yaxis: { title: 'Amplitude' }
+    message.forEach(val => {
+      messageUpsampled.push(val);
+      for (let i = 1; i < upsampleFactor; i++) {
+        messageUpsampled.push(0);
+      }
     });
 
-    // Scroll to the plot smoothly
-    document.getElementById('scrolltoconvolutionPlot').scrollIntoView({ behavior: 'smooth' });
-}
-
-
-
-let NoisySignalTrace;
-function generateNoisySignalff() {
-    const Fs = 1000;   // Sampling frequency in Hz
-    const dt = 1 / Fs; // Time step in seconds
-
-    // Generate time vector in seconds (instead of milliseconds)
-    const timeVector = Array.from({ length: convSignal.length }, (_, i) => i * dt/100);  // in seconds
-
-    const EbN0dB = parseFloat(document.getElementById('snr').value);
-    const noisy_signal = addAWGN(convSignal, EbN0dB);
-
-    NoisySignalTrace = {
-        x: timeVector,
-        y: noisy_signal,
-        type: "scatter",
-        mode: "lines",
-        name: "Received Signal",
-        line: { color: 'red', width: 2 }
-    };
-
-    const NoisySignalLayout = {
-        title: "Noisy Signal",
-        xaxis: { title: "Time (s)" },  // Changed ms to s here
-        yaxis: { title: "Amplitude" }
-    };
-
-    Plotly.newPlot('noisy-plot', [NoisySignalTrace], NoisySignalLayout);
-
-    // Scroll to the plot area
-    const scrollTarget = document.getElementById('scrolltonoisy');
-    if (scrollTarget) {
-        scrollTarget.style.display = 'block';
-        scrollTarget.scrollIntoView({ behavior: 'smooth' });
+    // Convolution
+    const y = new Array(messageUpsampled.length + h.length - 1).fill(0);
+    for (let i = 0; i < messageUpsampled.length; i++) {
+      for (let j = 0; j < h.length; j++) {
+        y[i + j] += messageUpsampled[i] * h[j];
+      }
     }
 
-    // Save data if needed
-    saveData();
-}
+    // Time axes
+    const messageTime = messageUpsampled.map((_, i) => i); // in ms
+    const convTime = y.map((_, i) => i); // in ms
+/*
+    // Plot original (upsampled) message signal
+    const trace1 = {
+      x: messageTime,
+      y: messageUpsampled,
+      mode: 'lines+markers',
+      name: 'Upsampled Message Signal',
+      line: { color: 'blue' }
+    };
 
+    Plotly.newPlot('messagePlot', [trace1], {
+      title: 'Upsampled Message Signal (1 ms spacing)',
+      xaxis: { title: 'Time (ms)' },
+      yaxis: { title: 'Amplitude' }
+    });
+*/
+
+
+    // Plot convolved output
+    const convolvedSignalTrace = {
+  x: convTime.slice(0, 100).flatMap(t => [t/100, t/100, null]),
+  y: y.slice(0, 100).flatMap(val => [0, val, null]),
+  mode: 'lines',
+  line: { color: 'red', width: 4 },
+  type: 'scatter',
+  name: 'Convolved Signal (Channel Output)'
+};
+
+/*
+const convAnnotations = y.slice(0, 100).map((val, index) => ({
+  x: convTime[index],
+  y: 1 + 0.1, // slightly above the point
+  text: val.toFixed(2),
+  showarrow: false,
+  font: { color: "black", size: 12 }
+}));
+*/
+Plotly.newPlot('convolutionPlot', [convolvedSignalTrace], {
+  title: 'Output after Convolution with Channel',
+  xaxis: { title: 'Time (ms)' },
+  yaxis: { title: 'Amplitude' },
+  //annotations: convAnnotations
+});
+
+document.getElementById('scrolltoconvolutionPlot').scrollIntoView({ behavior: 'smooth' });
+    }    
+
+    let convolvedSignalTrace;
+    function generateNoisySignalff() {
+
+			const EbN0dB = parseFloat(document.getElementById('snr').value);
+        // Original message signal (every 10 ms)
+        const message = data.slice(0,10);
+    //const h = [1, 0.8]; // channel impulse response (1 ms spacing)
+
+    // Upsample message to 1 ms spacing (insert 9 zeros between)
+    const upsampleFactor = 10;
+    const messageUpsampled = [];
+
+    message.forEach(val => {
+      messageUpsampled.push(val);
+      for (let i = 1; i < upsampleFactor; i++) {
+        messageUpsampled.push(0);
+      }
+    });
+
+    // Convolution
+    const y = new Array(messageUpsampled.length + h.length - 1).fill(0);
+    for (let i = 0; i < messageUpsampled.length; i++) {
+      for (let j = 0; j < h.length; j++) {
+        y[i + j] += messageUpsampled[i] * h[j];
+      }
+    }
+
+    const yNoisy = addAWGN(y, EbN0dB);
+    // Time axes
+    const messageTime = messageUpsampled.map((_, i) => i); // in ms
+    const convTime = y.map((_, i) => i); // in ms
+/*
+    // Plot original (upsampled) message signal
+    const trace1 = {
+      x: messageTime,
+      y: messageUpsampled,
+      mode: 'lines+markers',
+      name: 'Upsampled Message Signal',
+      line: { color: 'blue' }
+    };
+
+    Plotly.newPlot('messagePlot', [trace1], {
+      title: 'Upsampled Message Signal (1 ms spacing)',
+      xaxis: { title: 'Time (ms)' },
+      yaxis: { title: 'Amplitude' }
+    });
+*/
+
+
+    // Plot convolved output
+  convolvedSignalTrace = {
+  x: convTime.slice(0, 100).flatMap(t => [t/100, t/100, null]),
+  y: yNoisy.slice(0, 100).flatMap(val => [0, val, null]),
+  mode: 'lines',
+  line: { color: 'red', width: 4 },
+  type: 'scatter',
+  name: 'Noisy Signal'
+};
+
+/*
+const convAnnotations = y.slice(0, 100).map((val, index) => ({
+  x: convTime[index],
+  y: 1 + 0.1, // slightly above the point
+  text: val.toFixed(2),
+  showarrow: false,
+  font: { color: "black", size: 12 }
+}));
+*/
+Plotly.newPlot('noisy-plot', [convolvedSignalTrace], {
+  title: 'Noisy Signal',
+  xaxis: { title: 'Time (ms)' },
+  yaxis: { title: 'Amplitude' },
+  //annotations: convAnnotations
+});
+
+						// Scroll to the plot area
+
+			document.getElementById('scrolltonoisy').style.display = 'block';
+			            document.getElementById('scrolltonoisy').scrollIntoView({ behavior: 'smooth' });
+
+      saveData();
+        }
 
 
         function saveData() {
 
 // Store as an object (use the variables you actually defined)
-const myData = { dataHat: dataHat, dataHatSingleTap: dataHatSingleTap, NoisySignalTrace: NoisySignalTrace, transmittedSignalTrace:transmittedSignalTrace };
+const myData = { dataHat: dataHat, dataHatSingleTap: dataHatSingleTap, convolvedSignalTrace: convolvedSignalTrace };
 
-console.log(myData);
 localStorage.setItem('sharedData', JSON.stringify(myData));
 }
 
