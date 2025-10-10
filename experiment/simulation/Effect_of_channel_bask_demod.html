@@ -233,8 +233,9 @@
 <div>
     <h1>Instructions for BASK Demodulation Simulation (with AWGN + Rayleigh)</h1>
 <ul>
-    <li class="step step3">Step 1: Click 'Demodulated Signal' for demodulation</li>
-    <li class="step step4">Step 2: Click 'Demodulated Signal without Rayleigh' to see the signal unaffected by Rayleigh Fading</li>
+  <li class="step step4">Step 1: Click 'Input' to see the received noisy signal</li>
+    <li class="step step3">Step 2: Click 'Demodulated Signal' for demodulation</li>
+
 </ul>
 </div>
 <br/>
@@ -269,7 +270,7 @@
               Demodulated Signal
             </button>
             <button
-              class="button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[235px]"
+              class="hidden button bg-blue-500 text-white rounded-md px-2 py-1 relative bottom-[120px] left-[235px]"
               onclick="withoutRayleigh()"
             >
             Demodulated Signal<br/>without Rayleigh
@@ -285,7 +286,7 @@
         <div class="max-h-[400px] max-w-[500px]" id="demodulatedSignal"></div>
 
         </div>
-        <div id = "scrolltowithoutrayleigh" align = "center">
+        <div class = "hidden" id = "scrolltowithoutrayleigh" align = "center">
         <div class="max-h-[400px] max-w-[500px]" id="withoutRayleigh"></div>
         <!----
         <a href = "#top"><button>Back to Top</button></a>
@@ -692,34 +693,60 @@ function generateASKModulatedSignal() {
             document.getElementById('scrolltoimpulse').scrollIntoView({ behavior: 'smooth' });
 			}
 			
-			function generateDemodulatedSignal() {    
-            const demodulatedSignalTrace = {
-                x: Array.from({ length: 100 }, (_, i) => i/100).flatMap(i => [i, i, null]),
-                y: dataHat.slice(0, 10).flatMap(y => [0, y, null]),
-                mode: 'lines',
-	            line: { color: 'blue', width: 4 },
-                type: 'scatter'
-            };
+      function generateDemodulatedSignal() {
+    const bits = dataHat.slice(0, 10);
 
-            const annotations = dataHat.slice(0, 10).map((bit, index) => ({
-            x: index * (1 / 100),  // center of the pulse
-            y: 1.1,                      // a little above the bit value
-            text: bit.toString(),
-            showarrow: false,
-            font: { color: "black", size: 14 }
-            }));
+    const x = [];
+    const y = [];
 
-            Plotly.newPlot('demodulatedSignal', [demodulatedSignalTrace], {
-			    title : "Demodulated Message Signal",
-                xaxis: { title: 'Time (s)' },
-                yaxis: { title: 'Amplitude' },
-                annotations: annotations
-            });
-						// Scroll to the plot area
+    for (let i = 0; i < bits.length; i++) {
+        // Start of pulse
+        if (i === 0) {
+            x.push(i);
+            y.push(bits[i]);
+        } else {
+            // Vertical transition from previous bit
+            x.push(i);
+            y.push(bits[i - 1]);
 
-			document.getElementById('scrolltodemodulated').style.display = 'block';
-			           document.getElementById('scrolltodemodulated').scrollIntoView({ behavior: 'smooth' });
-			}
+            x.push(i);
+            y.push(bits[i]);
+        }
+
+        // Hold value for the rest of bit period
+        x.push(i + 1);
+        y.push(bits[i]);
+    }
+
+    const demodulatedSignalTrace = {
+        x: x,
+        y: y,
+        mode: 'lines',
+        line: { color: 'blue', width: 2 },
+        type: 'scatter',
+        name: 'Demodulated Signal'
+    };
+
+    const annotations = bits.map((bit, index) => ({
+        x: index + 0.5,
+        y: 1.1,
+        text: bit.toString(),
+        showarrow: false,
+        font: { color: "black", size: 14 }
+    }));
+
+    Plotly.newPlot('demodulatedSignal', [demodulatedSignalTrace], {
+        title: "Demodulated Message Signal",
+        xaxis: { title: 'Time (s)' },
+        yaxis: { title: 'Amplitude' },
+        annotations: annotations
+    });
+
+    document.getElementById('scrolltodemodulated').style.display = 'block';
+    document.getElementById('scrolltodemodulated').scrollIntoView({ behavior: 'smooth' });
+}
+
+
 			
 	    function withoutRayleigh() {	
 			const withoutRayleighTrace = {
@@ -930,22 +957,27 @@ Plotly.newPlot('noisy-plot', [convolvedSignalTrace], {
 			            document.getElementById('scrolltonoisy').scrollIntoView({ behavior: 'smooth' });
         }
 
-
+let NoisySignalTrace, transmittedSignalTrace;
 function Input() {
-  Plotly.newPlot('Input', [convolvedSignalTrace], {
-  title: 'Noisy Signal',
-  xaxis: { title: 'Time (ms)' },
-  yaxis: { title: 'Amplitude' },
-  //annotations: convAnnotations
-});
+  if (!transmittedSignalTrace && !NoisySignalTrace) {
+    alert("No traces available to plot.");
+    return;
+  }
 
+  const traces = [];
+  if (transmittedSignalTrace) traces.push(transmittedSignalTrace);
+  if (NoisySignalTrace) traces.push(NoisySignalTrace);
 
-// Scroll to the PAM chart after it has been generated
-document.getElementById("Input").scrollIntoView({
-behavior: "smooth",
-block: "center"
-});
+  Plotly.newPlot('Input', traces, {
+    title: 'Received Signal',
+    xaxis: { title: 'Time (ms)' },
+    yaxis: { title: 'Amplitude' }
+  });
 
+  document.getElementById("Input").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
 }
 
         function loadData() {
@@ -957,7 +989,8 @@ block: "center"
 	
 	dataHat = parsed.dataHat ?? null;
         dataHatSingleTap = parsed.dataHatSingleTap ?? null;
-        convolvedSignalTrace = parsed.convolvedSignalTrace ?? null;
+        NoisySignalTrace = parsed.NoisySignalTrace ?? null;
+        transmittedSignalTrace = parsed.transmittedSignalTrace ?? null;
   }
 }
 
