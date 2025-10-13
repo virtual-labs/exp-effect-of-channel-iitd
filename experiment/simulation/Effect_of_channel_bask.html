@@ -68,8 +68,20 @@
     <label for="numTaps" class="custom-text">Enter the number of Multi-paths:</label>
     <input type="number" id="numTaps" min = "1" value="4"><br>
 
-    <label for="excessDelay" class="custom-text">Excess Delay (in ms):</label>
-    <input type="number" id="excessDelay" value="3"  readonly><br>
+    <div class="flex items-center space-x-4">
+        <!-- Excess Delay Label and Input -->
+        <label for="excessDelay" class="custom-text">Excess Delay:</label>
+        <input type="number" id="excessDelay" value="3" readonly class="p-2 border border-gray-300 rounded-md w-24">
+
+        <!-- Time Unit Label and Select Dropdown -->
+        <label for="unit" class="custom-text">Choose time unit:</label>
+        <select id="unit" class="p-2 border border-gray-300 rounded-md">
+            <option value="cs">Centiseconds (cs)</option>
+            <option value="ms">Milliseconds (ms)</option>
+        </select>
+    </div>
+        
+    </select><br/>
     
     <label for="bitRate" class="custom-text">Bit Rate (bps):</label>
     <input type="number" id="bitRate" value="100" readonly><br/>
@@ -402,10 +414,29 @@ function addAWGN(txSignal, EbN0dB) {
             const U_sig = 10;
 
             // Channel Impulse Response
-            const delays = Array.from({ length: numTaps }, (_, i) => i);
+            const delays = Array.from({ length: numTaps}, (_, i) => i);
             h = delays.map(d => 0.8 * Math.exp(-d / (numTaps / 2)));
             h = h.map(v => v / Math.sqrt(h.reduce((acc, x) => acc + x * x, 0)));
-            
+
+            const unit = document.getElementById('unit').value;
+            // Initialize an array to hold the new h array with zero interpolation
+            let interpolatedH = [];
+            let zerosToInsert = unit === "ms" ? 1 : 9; 
+            // For each pair in h, insert 9 zeros between them
+            for (let i = 0; i < h.length - 1; i++) {
+                interpolatedH.push(h[i]);  // Add the current value
+
+                // Insert 9 zeros after the current value before the next value
+                for (let j = 0; j < zerosToInsert; j++) {
+                    interpolatedH.push(0);  // Add zero
+                }
+            }
+
+            // Add the last value from the original h array
+            interpolatedH.push(h[h.length - 1]);
+
+            // Store the result back in the h variable
+            h = interpolatedH;  // Store the interpolated h array with zeros in the h variable
 
             // Generate random binary data
             data = Array.from({ length: N_total }, () => Math.floor(Math.random() * 2));
