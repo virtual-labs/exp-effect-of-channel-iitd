@@ -46,11 +46,11 @@
 </head>
 <body>
     <div id = "instructions">
-        <h1>Instructions for BPSK Simulation (with AWGN + Rayleigh)</h1>
+        <h1>Instructions for QPSK Simulation (with AWGN + Rayleigh)</h1>
     <ul>
-        <li class="step step4"><strong>Note:</strong> Use the input fields to enter the Number of Bits, SNR (in dB), number of multi-paths, excess delay (in ms), bit rate (in bps), symbol duration (in ms / cs), and the carrier frequency (in Hz)</li>
+      <li class="step step4"><strong>Note:</strong> Use the input fields to enter the Number of Bits, SNR (in dB), number of multi-paths, excess delay (in ms), bit rate (in bps), symbol duration (in ms / cs), and the carrier frequency (in Hz)</li>
 
-        <li class="step step1"><strong>Step 1:</strong> Click <em>'Generate BPSK Message'</em> to generate the input BPSK modulated signal</li>
+        <li class="step step1"><strong>Step 1:</strong> Click <em>'Generate QPSK Message'</em> to generate the input QPSK modulated signal</li>
         <li class="step step2"><strong>Step 2:</strong> Click <em>'Generate Multi-path for Rayleigh'</em> to plot the Channel Impulse Response (CIR) for the Rayleigh fading channel</li>
         <li class="step step3"><strong>Step 3:</strong> Click <em>'LTI Output'</em> to generate the output after convolution with the channel</li>        
         <li class="step step2"><strong>Step 4:</strong> Click <em>'ADD AWGN Noise'</em> to add AWGN noise</li>            
@@ -60,10 +60,11 @@
     </div>
     <br/>
     <div  style = "margin-left: 30px;">
-    <h1>BPSK Simulation (with AWGN + Rayleigh)</h1>
+    <h1>QPSK Simulation (with AWGN + Rayleigh)</h1>
 	<br/>
     <label for="numBits" class="custom-text">Number of Bits:</label>
     <input type="number" id="numBits" value="1000"><br>
+
     <label for="snr" class="custom-text">Enter SNR value in dB:</label>
     <input type="number" id="snr" value="0"><br>
 
@@ -88,6 +89,7 @@
 	
     <label for="symbolDuration" class="custom-text">Symbol duration (ms):</label>
     <input type="number" id="symbolDuration" value="10" readonly>
+
     <br/><label for="carrierFrequency" class="custom-text">Carrier Frequency (Hz):</label>
     <input type="number" id="carrierFrequency" value="1000"><br>
     </div>
@@ -110,7 +112,7 @@
                   class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[110px] left-[-20px]"
                   onclick="runSimulation1()"
                 >
-                  Generate BPSK <br/> Message
+                  Generate QPSK <br/> Message
                 </button>
 <!---				
 				<button
@@ -155,7 +157,7 @@
 -->
                 <a href = "./Effect_of_channel_bpsk_ber.html">
                 <button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[-80px] left-[500px]"
+                  class="hidden button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[-80px] left-[500px]"
                 >
                 Plot BER vs SNR
                 </button>
@@ -241,7 +243,7 @@
 </div>
 
 <div align = "center">
-  <a href = ".\Effect_of_channel_bpsk_demod.html">
+  <a href = ".\Effect_of_channel_qpsk_demod.html">
   <button
   class="bg-blue-500 text-white py-1 px-3  rounded-md hover:scale-105"
 >
@@ -402,64 +404,195 @@ function addAWGN(txSignal, EbN0dB) {
         runSimulation();
         generateASKModulatedSignal();
         }
+/*
+        function modulateGrayCodedQPSK(data) {
+    if (data.length % 2 !== 0) {
+        throw new Error("Data length should be even for QPSK modulation.");
+    }
+
+    const grayCodeMap = {
+        '00': { I: -1, Q: -1 },
+        '01': { I: 1, Q: -1 },
+        '11': { I: 1, Q: 1 },
+        '10': { I: -1, Q: 1 }
+    };
+
+    let symbols = [];
+    for (let i = 0; i < data.length; i += 2) {
+        // Get a 2-bit string (b1, b2)
+        const bits = data.slice(i, i + 2).join('');
+        const symbol = grayCodeMap[bits];
+        symbols.push(symbol);
+    }
+
+    return symbols;
+}
+
+
+function demodulateGrayCodedQPSK(signal) {
+    const grayCodeMap = {
+        '00': { I: -1, Q: -1 },
+        '01': { I: 1, Q: -1 },
+        '11': { I: 1, Q: 1 },
+        '10': { I: -1, Q: 1 }
+    };
+
+    // Reverse map to decode from symbol to bits
+    const reverseGrayCodeMap = {};
+    for (const bits in grayCodeMap) {
+        const symbol = grayCodeMap[bits];
+        reverseGrayCodeMap[`${symbol.I},${symbol.Q}`] = bits;
+    }
+
+    // Define a tolerance for comparison (e.g., allow for small floating-point discrepancies)
+    const tolerance = 0.1; // Adjust this tolerance based on your system's noise characteristics
+
+    return signal.map(s => {
+        let closestMatch = null;
+        let minDistance = Infinity;
+
+        // Find the closest symbol using a tolerance for matching I, Q values
+        for (const key in reverseGrayCodeMap) {
+            const [I, Q] = key.split(',').map(Number);
+
+            const distance = Math.sqrt(Math.pow(s.I - I, 2) + Math.pow(s.Q - Q, 2));
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestMatch = reverseGrayCodeMap[key];
+            }
+        }
+
+        // If no match was found (which shouldn't happen with enough tolerance), default to "00"
+        if (closestMatch === null) {
+            console.warn('No close match found for received symbol, defaulting to "00"');
+            closestMatch = '00';
+        }
+
+        // Return the bit representation of the closest symbol
+        return closestMatch.split('').map(Number);
+    }).flat(); // Flatten the array of bit pairs into a single array of bits
+}
+*/
+
+function modulateGrayCodedQPSK(data) {
+    if (data.length % 2 !== 0) {
+        throw new Error("Data length should be even for QPSK modulation.");
+    }
+
+    // Gray code to decimal mapping
+    const grayCodeMap = {
+        '00': 0,
+        '01': 1,
+        '11': 2,
+        '10': 3
+    };
+
+    let symbols = [];
+    for (let i = 0; i < data.length; i += 2) {
+        // Get a 2-bit string (b1, b2)
+        const bits = data.slice(i, i + 2).join('');
+        const symbol = grayCodeMap[bits];
+        symbols.push(symbol); // Store the decimal symbol (0, 1, 2, 3)
+    }
+
+    return symbols;
+}
+
+// Gray-Coded QPSK Demodulation using Decimal Symbols
+function demodulateGrayCodedQPSK(signal) {
+    // QPSK Constellation points and their Gray codes
+    const constellation = [
+        { value: 0, grayCode: '00' }, // Symbol 0: (-1, -1)
+        { value: 1, grayCode: '01' }, // Symbol 1: ( 1, -1)
+        { value: 2, grayCode: '11' }, // Symbol 2: ( 1,  1)
+        { value: 3, grayCode: '10' }  // Symbol 3: (-1,  1)
+    ];
+
+    return signal.map(symbol => {
+        // Find the closest QPSK symbol (using Euclidean distance or absolute difference)
+        const closestSymbol = findClosestSymbol(symbol, constellation);
+
+        // Return the corresponding Gray code
+        return closestSymbol.grayCode.split('').map(Number); // Convert Gray code to bits
+    }).flat(); // Flatten the array of bit pairs into a single array of bits
+}
+
+// Helper function to find the closest symbol based on the Euclidean distance (or absolute difference)
+function findClosestSymbol(receivedSymbol, constellation) {
+    let minDistance = Infinity;
+    let closestSymbol = null;
+
+    // Calculate the absolute difference (Euclidean distance) between the received symbol and QPSK constellation points
+    constellation.forEach(symbol => {
+        const distance = Math.abs(receivedSymbol - symbol.value);
+
+        // Find the closest symbol
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestSymbol = symbol;
+        }
+    });
+
+    return closestSymbol; // Return the closest symbol
+}
+
 
         function runSimulation() {
-            const EbN0dB = parseFloat(document.getElementById('snr').value);
-            const numTaps = parseInt(document.getElementById('numTaps').value);
-            if (numTaps >= 11) {
-                alert("Excess delay should be less than 10 ms as the symbol duration for BASK is 10 ms.");
-               window.location.reload(true);  
-				return;
-            }
-            const N_total = document.getElementById('numBits').value;
-            const U_sig = 10;
+    const EbN0dB = parseFloat(document.getElementById('snr').value);
+    const numTaps = parseInt(document.getElementById('numTaps').value);
+    if (numTaps >= 11) {
+        alert("Excess delay should be less than 10 ms as the symbol duration for QPSK is 10 ms.");
+        window.location.reload(true);  
+        return;
+    }
 
-            // Channel Impulse Response
-            const delays = Array.from({ length: numTaps }, (_, i) => i);
-            h = delays.map(d => 0.8 * Math.exp(-d / (numTaps / 2)));
-            h = h.map(v => v / Math.sqrt(h.reduce((acc, x) => acc + x * x, 0)));
-            
-            const unit = document.getElementById('unit').value;
-            // Initialize an array to hold the new h array with zero interpolation
-            let interpolatedH = [];
-            let zerosToInsert = unit === "ms" ? 1 : 9; 
-            // For each pair in h, insert 9 zeros between them
-            for (let i = 0; i < h.length - 1; i++) {
-                interpolatedH.push(h[i]);  // Add the current value
+    const N_total = document.getElementById('numBits').value;
+    const U_sig = 10;
 
-                // Insert 9 zeros after the current value before the next value
-                for (let j = 0; j < zerosToInsert; j++) {
-                    interpolatedH.push(0);  // Add zero
-                }
-            }
+    // Channel Impulse Response
+    const delays = Array.from({ length: numTaps }, (_, i) => i);
+    h = delays.map(d => 0.8 * Math.exp(-d / (numTaps / 2)));
+    h = h.map(v => v / Math.sqrt(h.reduce((acc, x) => acc + x * x, 0)));
 
-            // Add the last value from the original h array
-            interpolatedH.push(h[h.length - 1]);
+    const unit = document.getElementById('unit').value;
+    let interpolatedH = [];
+    let zerosToInsert = unit === "ms" ? 1 : 9; 
 
-            // Store the result back in the h variable
-            h = interpolatedH;  // Store the interpolated h array with zeros in the h variable
-            
-            // Generate random binary data
-            data = Array.from({ length: N_total }, () => Math.floor(Math.random() * 2));
-			
-            const upsampledtransmittedSignal = upsampleSignal(data, U_sig);
-            // BASK Modulation
-            const BASKMod = modulateBASK(data);
+    for (let i = 0; i < h.length - 1; i++) {
+        interpolatedH.push(h[i]);
 
-            // Upsample the BASK signal
-            upsampledSignal = upsampleSignal(BASKMod, U_sig);
+        for (let j = 0; j < zerosToInsert; j++) {
+            interpolatedH.push(0);
+        }
+    }
 
-            // Transmit signal through the channel
-            txSignal = manualConv(upsampledSignal, h);
-            // Generate and add AWGN noise
-            const rxSignal = addAWGN(txSignal, EbN0dB);
+    interpolatedH.push(h[h.length - 1]);
+    h = interpolatedH;
 
-            // Downsample to recover the original BASK samples
-            const downsampledSignal = downsampleSignal(rxSignal, U_sig);
+    // Generate random binary data
+    data = Array.from({ length: N_total }, () => Math.floor(Math.random() * 2));
 
-            // BASK Demodulation
-            dataHat = demodulateBASK(downsampledSignal);
-            const upsampleddataHat = upsampleSignal(dataHat, U_sig);
+    const upsampledtransmittedSignal = upsampleSignal(data, U_sig);
+
+    // Gray-Coded QPSK Modulation
+    const GrayCodedQPSKMod = modulateGrayCodedQPSK(data);
+    
+    // Upsample the Gray-coded QPSK signal
+    upsampledSignal = upsampleSignal(GrayCodedQPSKMod, U_sig);
+
+    // Transmit signal through the channel
+    txSignal = manualConv(upsampledSignal, h);
+    console.log("data", txSignal);
+    // Generate and add AWGN noise
+    const rxSignal = addAWGN(txSignal, EbN0dB);
+
+    // Downsample to recover the original QPSK samples
+    const downsampledSignal = downsampleSignal(rxSignal, U_sig);
+
+    // Gray-Coded QPSK Demodulation
+    dataHat = demodulateGrayCodedQPSK(downsampledSignal);
+    const upsampleddataHat = upsampleSignal(dataHat, U_sig);
             // Calculate BER
             const berMultipath = calculateBER(data, dataHat.slice(0, N_total));
 			
@@ -494,7 +627,8 @@ function addAWGN(txSignal, EbN0dB) {
 
            // Update the content of the div using innerHTML
            document.getElementById('berMessage').innerHTML = message;
-	
+
+
 /*
            const transmittedSignalTrace = {
   x: Array.from({ length: 10 }, (_, i) => i / 100).flatMap(i => [i, i, null]),
@@ -716,7 +850,7 @@ function plotBERvsSNRSingleTap() {
 			
 		}
 		
-        function generateASKModulatedSignal() {
+function generateASKModulatedSignal() {
     const fs = 1000; // Sampling frequency
     const f = document.getElementById('carrierFrequency').value / 100;
     const bp = 1/100; // Bit period (seconds)
@@ -725,42 +859,62 @@ function plotBERvsSNRSingleTap() {
     const bit = messageSignal; // Use messageSignal directly if it represents the bit values
     
     const t1 = []; // Time array for the modulated signal
-    for (let i = 0; i < fs * bit.length; i++) {
-        t1.push((i / fs) * bp); // Time array for each bit period
+    for (let i = 0; i < fs * (bit.length / 2); i++) {
+        t1.push((i / fs) * bp); // Time array for each symbol period (2 bits per symbol in QPSK)
     }
     
-    const A = 1; // Amplitude for both bit 0 and bit 1 (same in BPSK)
+    const A = 1; // Amplitude for QPSK symbols
     
     modulated_signal = []; // Initialize modulated signal array
     
-    for (let i = 0; i < bit.length; i++) {
-        const t2 = Array.from({ length: fs }, (_, k) => k / fs); // Time array for one bit period
-        const y = bit[i] === 1
-            ? t2.map(t => A * Math.cos(2 * Math.PI * f * t))   // Bit 1: normal cosine wave
-            : t2.map(t => A * Math.cos(2 * Math.PI * f * t + Math.PI)); // Bit 0: phase-shifted cosine (π shift)
+    // Gray coding map for QPSK
+    const grayCodeMap = {
+        '00': { phase: 0 },   // 0° phase shift
+        '01': { phase: Math.PI / 2 },  // 90° phase shift
+        '11': { phase: Math.PI },  // 180° phase shift
+        '10': { phase: 3 * Math.PI / 2 }  // 270° phase shift
+    };
+    
+    // Process the data in pairs of bits for QPSK
+    for (let i = 0; i < bit.length; i += 2) {
+        // Create a time array for one symbol period (2 bits)
+        const t2 = Array.from({ length: fs }, (_, k) => k / fs);
         
-        modulated_signal = modulated_signal.concat(y); // Concatenate each bit period's signal
+        // Modulate based on the Gray coded pair of bits
+        const bitPair = bit.slice(i, i + 2).join('');
+        let y = [];
+        
+        // Get the phase corresponding to the Gray code for the current bit pair
+        const phase = grayCodeMap[bitPair].phase;
+
+        // Apply the phase shift to the signal (cosine or sine depending on the phase)
+        y = t2.map(t => A * Math.cos(2 * Math.PI * f * t + phase)); // Apply the phase shift
+        
+        modulated_signal = modulated_signal.concat(y); // Concatenate each symbol's signal
     }
     
+    // Prepare data for plotting
     const modulatedData = [
         {
             x: t1,
             y: modulated_signal,
             type: "scatter",
             mode: "lines",
-            name: "BPSK Modulated Signal",
+            name: "Gray Coded QPSK Modulated Signal",
             line: { color: "blue" },
         },
     ];
     
+    // Plot the Gray coded QPSK modulated signal
     Plotly.newPlot("modulated-plot", modulatedData, {
-        title: "BPSK Modulated Signal",
+        title: "Gray Coded QPSK Modulated Signal",
     });
     
     // Scroll to the plot area
     document.getElementById('scrolltomodulated').style.display = 'block';
     document.getElementById('scrolltomodulated').scrollIntoView({ behavior: 'smooth' });
 }
+
 
 
 		
@@ -806,7 +960,7 @@ function plotBERvsSNRSingleTap() {
 
             Plotly.newPlot('demodulatedSignal', [demodulatedSignalTrace], {
 			    title : "Demodulated Message Signal",
-                xaxis: { title: 'Time (s)' },
+                xaxis: { title: 'Bit Index' },
                 yaxis: { title: 'Amplitude' },
                 annotations: annotations
             });
