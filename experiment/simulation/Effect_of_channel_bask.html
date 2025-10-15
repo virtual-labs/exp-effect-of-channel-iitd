@@ -47,16 +47,16 @@
 <body>
     <div id = "instructions">
         <h1>Instructions for BASK Simulation (with AWGN + Rayleigh)</h1>
-    <ul>
-        <li class="step step4"><strong>Note:</strong> Use the input fields to enter the Number of Bits, SNR (in dB), number of multi-paths, excess delay (in ms), bit rate (in bps), symbol duration (in ms / cs), and the carrier frequency (in Hz)</li>
-
-        <li class="step step1"><strong>Step 1:</strong> Click <em>'Generate BASK Message'</em> to generate the input BASK modulated signal</li>
-        <li class="step step2"><strong>Step 2:</strong> Click <em>'Generate Multi-path for Rayleigh'</em> to plot the Channel Impulse Response (CIR) for the Rayleigh fading channel</li>
-        <li class="step step3"><strong>Step 3:</strong> Click <em>'LTI Output'</em> to generate the output after convolution with the channel</li>        
-        <li class="step step2"><strong>Step 4:</strong> Click <em>'ADD AWGN Noise'</em> to add AWGN noise</li>            
-
-        <li class="step step1"><strong>Step 5:</strong> Click <em>'Plot BER vs SNR'</em> to compare BER with and without Rayleigh fading</li>
-    </ul>
+        <ul>
+            <li class="step step4"><strong>Note:</strong> Use the input fields to enter the Number of Bits, SNR (in dB), number of multi-paths, excess delay (in ms), bit rate (in bps), symbol duration (in ms / cs), and the carrier frequency (in Hz)</li>
+            <li class="step step1"><strong>Step 1:</strong> Click <em>'Generate Message'</em> to generate the original message signal</li>
+              <li class="step step1"><strong>Step 2:</strong> Click <em>'Generate BASK Signal'</em> to generate the BASK modulated signal</li>
+              <li class="step step2"><strong>Step 3:</strong> Click <em>'Generate Rayleigh Channel Multipath (CIR)'</em> to plot the Channel Impulse Response (CIR) for the Rayleigh fading channel</li>
+              <li class="step step3"><strong>Step 4:</strong> Click <em>'Convolve with CIR'</em> to generate the output after convolution with the channel</li>        
+              <li class="step step2"><strong>Step 5:</strong> Click <em>'ADD AWGN Noise'</em> to add AWGN noise</li>            
+      
+              <li class="step step1"><strong>Step 6:</strong> Click <em>'Plot BER vs SNR'</em> to compare BER with and without Rayleigh fading</li>
+          </ul>
     </div>
     <br/>
     <div  style = "margin-left: 30px;">
@@ -110,9 +110,9 @@
 
                 <button
                   class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[110px] left-[-20px]"
-                  onclick="runSimulation1()"
+                  onclick="runSimulation()"
                 >
-                  Generate BASK <br/> Message
+                  Generate Message
                 </button>
 <!---				
 				<button
@@ -121,22 +121,22 @@
                 >
                   Generate Carrier
                 </button>
-            
+  -->          
 				<button
                   class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[300px] left-[-20px]"
                   onclick="generateASKModulatedSignal()"
                 >
-                  Generate BASK<br/>of Message
+                  Generate BASK<br/>Signal
                 </button>
--->
+
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[440px] left-[130px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[440px] left-[95px]"
                   onclick="generateChannelImpulseResponse()"
                 >
-                Generate Multi-path for Rayleigh
+                Generate Rayleigh Channel Multipath (CIR)
                 </button>
 				<button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[480px] left-[240px]"
+                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[480px] left-[270px]"
                   onclick="generateNoisySignalff()"
                 >
                   Add AWGN Noise
@@ -155,9 +155,9 @@
                 Demodulated Signal<br/>without Rayleigh
                 </button>
 -->
-                <a href = "./Effect_of_channel_bask_ber.html">
+                <a href = "./Effect_of_channel_bpsk_ber.html">
                 <button
-                  class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[-80px] left-[500px]"
+                  class="hidden button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[-80px] left-[500px]"
                 >
                 Plot BER vs SNR
                 </button>
@@ -165,10 +165,10 @@
 
 
                <button
-               class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[480px] left-[130px]"
+               class="button bg-blue-500 text-white rounded-md px-2 py-1 absolute top-[480px] left-[95px]"
                onclick="LTIOutput()"
              >
-             LTI Output
+             Convolve with CIR
              </button>
              <button
              class="button bg-green-500 text-white rounded-md px-2 py-1 absolute top-[-10px] left-[500px]"
@@ -401,10 +401,6 @@ function addAWGN(txSignal, EbN0dB) {
 
         document.getElementById("numTaps").addEventListener("input", updateFields);
 
-        function runSimulation1 () {
-        runSimulation();
-        generateASKModulatedSignal();
-        }
 
         function runSimulation() {
             const EbN0dB = parseFloat(document.getElementById('snr').value);
@@ -718,12 +714,13 @@ function plotBERvsSNRSingleTap() {
             });
 			
 		}
-		
+
 function generateASKModulatedSignal() {
     const fs = 1000; // Sampling frequency
     const f = document.getElementById('carrierFrequency').value / 100;
     const bp = 1/100; // Bit period (seconds)
     
+    modulated_signal = [];
     const messageSignal = data.slice(0, 10); // Assuming data is defined elsewhere
     const bit = messageSignal; // Use messageSignal directly if it represents the bit values
     
