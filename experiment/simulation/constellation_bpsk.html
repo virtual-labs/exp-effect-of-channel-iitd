@@ -54,7 +54,7 @@
 </head>
 <body>
     <div  style = "margin-left: 30px;">
-            <h1>Constellation Diagram for BASK Simulation (with AWGN + Rayleigh)</h1>
+            <h1>Constellation Diagram for BPSK Simulation (with AWGN + Rayleigh)</h1>
             <br/>
             <label for="snr" class="custom-text">Enter SNR value in dB:</label>
             <input type="number" id="snr" value="0"><br>
@@ -85,13 +85,13 @@
         Plot BER vs. SNR
         </button>
         </div>
-        <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="runSimulation()">plot Constellation Diagram</button>
+        <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="runSimulation()">Plot Constellation Diagram</button>
         <br>
 <br/>
 
 
 
-<div class="container">
+<div class="hidden container">
     <div class="left-half hidden">
 	            <br/><br/>
                 <div class="w-[450px]">
@@ -186,7 +186,7 @@
 			</div>
         </div>
     </div>
-    <div class="hidden right-half">
+    <div class="right-half">
 	<br/>
         <div id = "div1">
         <div id="berMessage"></div>
@@ -205,7 +205,7 @@
 
         <div id="berVsSNR"></div>
     </div>
-	    <div class="hidden right-half-ext">
+	    <div class="right-half-ext">
 		<br/>
         <div id = "div2">
         <div id="berMessageSingleTap"></div>
@@ -235,8 +235,6 @@
     <canvas id="signalCanvas" width="400" height="400"></canvas>
 </div>
 <div id="transmittedSignal"></div>
-
-
 
 
  <script>
@@ -276,7 +274,7 @@
 		let upsampledSignal = [];
 
         function modulateBASK(data) {
-            return data.map(bit => bit);
+            return data.map(bit => 2*bit - 1);
         }
 
         function upsampleSignal(signal, U_sig) {
@@ -287,31 +285,86 @@
             return upsampledSignal;
         }
 
-        function generateGaussianNoise(size) {
-            const noise = [];
-            while (noise.length < size) {
-                const u1 = Math.random();
-                const u2 = Math.random();
-                const z1 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-                const z2 = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
-                noise.push(z1, z2);
-            }
-            return noise.slice(0, size);
-        }
+// Function to generate complex Gaussian noise for BPSK (real and imaginary parts)
+function generateComplexGaussianNoise(size) {
+    const noise = [];
+    while (noise.length < size) {
+        const u1 = Math.random();
+        const u2 = Math.random();
+        const z1 = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);  // Real part noise
+        const z2 = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);  // Imaginary part noise
+        noise.push({ real: z1, imag: z2 });
+    }
+    return noise.slice(0, size);
+}
 
-        function addAWGN(txSignal, EbN0dB) {
-            const snr = Math.pow(10, EbN0dB / 10);
-            const noise = generateGaussianNoise(txSignal.length);
-            const normalizedNoise = noise.map(n => n / Math.sqrt(2));
-            return txSignal.map((s, i) => s + (1 / Math.sqrt(snr)) * normalizedNoise[i]);
-        }
+// Function to add AWGN to the BPSK signal (both real and imaginary noise)
+function addAWGN(txSignal, EbN0dB) {
+    const snr = Math.pow(10, EbN0dB / 10);
+    
+    // Generate complex Gaussian noise (real and imaginary components)
+    const noise = generateComplexGaussianNoise(txSignal.length);
+    
+    // Normalize noise (divide by sqrt(2) to match standard deviation of AWGN)
+    const normalizedNoise = noise.map(n => ({
+        real: n.real / Math.sqrt(2),
+        imag: n.imag / Math.sqrt(2)
+    }));
+
+    // Add the noise to the transmitted signal (signal is real-valued, noise is complex)
+    return txSignal.map((s, i) => ({
+        real: s + (1 / Math.sqrt(snr)) * normalizedNoise[i].real,
+        imag: (1 / Math.sqrt(snr)) * normalizedNoise[i].imag
+    }));
+}
+
+// Function to modulate BPSK: Map 0 -> -1, 1 -> +1 (real-valued)
+function modulateBPSK(data) {
+    return data.map(bit => (bit === 0 ? -1 : 1));  // BPSK modulation (0 -> -1, 1 -> +1)
+}
+
+// BPSK Demodulation: Decode based on the real part of the noisy signal
+function demodulateBPSK(signal) {
+    return signal.map(s => (s.real > 0 ? 1 : 0));  // If the real part > 0, decode as 1, else 0
+}
+
+// Function to calculate Bit Error Rate (BER)
+function calculateBER(data, dataHat) {
+    const errors = data.reduce((acc, bit, i) => bit !== dataHat[i] ? acc + 1 : acc, 0);
+    return errors / data.length;
+}
+
+// Example simulation with BPSK and complex Gaussian noise
+function runSimulation() {
+    const EbN0dB = 10; // Example SNR in dB
+    const N_total = 1000;  // Number of bits to transmit
+    const data = Array.from({ length: N_total }, () => Math.floor(Math.random() * 2));  // Random bits (0 or 1)
+
+    // BPSK Modulation (real-valued)
+    const modulatedSignal = modulateBPSK(data);
+
+    // Add complex AWGN noise (real and imaginary parts)
+    const noisySignal = addAWGN(modulatedSignal, EbN0dB);
+    console.log(noisySignal);
+
+    // BPSK Demodulation
+    const dataHat = demodulateBPSK(noisySignal);
+
+    // Calculate Bit Error Rate (BER)
+    const ber = calculateBER(data, dataHat);
+    console.log(`Bit Error Rate (BER): ${ber}`);
+
+    // Plot BPSK constellation diagram (real and imaginary parts)
+    plotConstellation(noisySignal, "Noisy BPSK Signal (With Complex Noise)", "bpskConstellationCanvas", "red");
+}
+
 
         function downsampleSignal(signal, U_sig) {
             return signal.filter((_, i) => i % U_sig === 0);
         }
 
         function demodulateBASK(signal) {
-            return signal.map(s => s > 0.5 ? 1 : 0);
+            return signal.map(s => s > 0 ? 1 : 0);
         }
 
         function calculateBER(data, dataHat) {
@@ -390,9 +443,10 @@
     
     // Generate and add AWGN noise
     const rxSignal = addAWGN(txSignal, EbN0dB);
-   // console.log(rxSignal);
+    //console.log(rxSignal);
     // Downsample to recover the original BASK samples
     const downsampledSignal = downsampleSignal(rxSignal, U_sig);
+
 
     // BASK Demodulation
     const dataHat = demodulateBASK(downsampledSignal);
@@ -419,8 +473,8 @@
     document.getElementById('berMessage').innerHTML = message;
 
     // Plot the BASK Constellation Diagram
-    plotConstellation(BASKMod, "Original BASK Signal", 'originalSignalCanvas', "blue");
-    plotConstellation(rxSignal, "Noisy BASK Signal (With AWGN + Rayleigh)", 'signalCanvas', "red");
+    plotConstellation0(BASKMod, "Original BPSK Signal", 'originalSignalCanvas', "blue");
+    plotConstellation(downsampledSignal, "Noisy BPSK Signal (With AWGN + Rayleigh)", 'signalCanvas', "red");
 
     // Plotting the transmitted signal waveform
     plotTransmittedSignal(data);
@@ -438,7 +492,7 @@
 }
 
 // Store chart instances
-let chartInstances = {};  // Store chart instances
+let chartInstances = {};
 
 function plotConstellation(signal, label, canvasId, color) {
     const canvas = document.getElementById(canvasId);
@@ -449,14 +503,72 @@ function plotConstellation(signal, label, canvasId, color) {
         chartInstances[canvasId].destroy();
     }
 
-    // Prepare the signal data for plotting
+    // Create the chart data
     const signalData = signal.map((value) => ({
-        x: value,  // Real part of the signal
-        y: 0,      // Imaginary part is zero, as the original data only uses the real part
+        x: value.real, // Real part of the noisy signal
+        y: value.imag, // Imaginary part of the noisy signal
     }));
 
     // Create a new chart instance
     chartInstances[canvasId] = new Chart(ctx, {
+        type: "scatter",
+        data: {
+            datasets: [{
+                label: label,
+                data: signalData,
+                borderColor: color,
+                borderWidth: 1,
+                pointBackgroundColor: color,
+                pointBorderColor: color,
+                pointRadius: 5,
+            }],
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: "Real (I)",
+                    },
+                    min: -2,  // Adjusted for a wider range to account for noise spreading
+                    max: 2,
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: "Imaginary (Q)",
+                    },
+                    min: -2,  // Adjusted for a wider range to account for noise spreading
+                    max: 2,
+                },
+            },
+        },
+    });
+}
+
+// Store chart instances for the second plot
+let chartInstances0 = {};  // Store chart instances for the second chart
+
+function plotConstellation0(signal, label, canvasId, color) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext("2d");
+
+    // Destroy the existing chart if it exists
+    if (chartInstances0[canvasId]) {
+        chartInstances0[canvasId].destroy();
+    }
+
+    // Prepare the signal data for plotting
+    const signalData = signal.map((value, index) => ({
+        x: value,  // Real part of the signal
+        y: 0,      // Imaginary part is zero, as the original data only uses the real part
+    }));
+
+    // Create a new chart on the canvas
+    chartInstances0[canvasId] = new Chart(ctx, {  // Use chartInstances0 instead of chartInstances
         type: "scatter",  // Scatter plot type
         data: {
             datasets: [{
@@ -478,6 +590,8 @@ function plotConstellation(signal, label, canvasId, color) {
                         display: true,
                         text: "Real (I)",  // Label for the x-axis
                     },
+                    min: -2,  // Adjust the axis range to account for the signal
+                    max: 2,
                 },
                 y: {
                     display: true,
@@ -485,11 +599,15 @@ function plotConstellation(signal, label, canvasId, color) {
                         display: true,
                         text: "Imaginary (Q)",  // Label for the y-axis
                     },
+                    min: -2,  // Adjust the axis range to account for signal spreading
+                    max: 2,
                 },
             },
         },
     });
 }
+
+
 
 function plotTransmittedSignal(data) {
     const bitsToPlot = 10;
