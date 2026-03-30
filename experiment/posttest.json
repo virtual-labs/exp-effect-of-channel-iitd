@@ -2,58 +2,58 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "Question 1: In a Rayleigh fading channel, what statistical property of the envelope causes deep signal fades?",
+      "question": "In a digital communication system affected by Rayleigh fading and AWGN, which of the following statements correctly describes the impact on the received signal?",
       "answers": {
-        "a": "High average power of multipath components.",
-        "b": "Zero mean of the in-phase and quadrature components.",
-        "c": "Exponential decay of the amplitude envelope.",
-        "d": "Constant phase rotation across paths."
+        "a": "Rayleigh fading only affects the phase of the signal, while AWGN only affects its amplitude.",
+        "b": "Rayleigh fading causes rapid amplitude and phase fluctuations, and AWGN adds constant background noise.",
+        "c": "AWGN causes deep fades in the signal, while Rayleigh fading adds predictable noise.",
+        "d": "Both Rayleigh fading and AWGN only delay the signal without altering its amplitude or phase."
       },
       "explanations": {
-        "a": "Incorrect! High power does not cause fades; it's the constructive/destructive combination.",
-        "b": "Correct! Zero mean Gaussian components result in Rayleigh-distributed amplitude, causing deep fades.",
-        "c": "Incorrect! This is more relevant in power-delay profiles, not envelope fading directly.",
-        "d": "Incorrect! Phase rotations vary randomly and cause fading, but not 'constant' ones."
+        "a": "Incorrect! Rayleigh fading affects both amplitude and phase, not just phase.",
+        "b": "Correct! Rayleigh fading introduces random amplitude and phase variations due to multipath, while AWGN adds additive Gaussian noise, reducing SNR.",
+        "c": "Incorrect! AWGN does not create deep fades; fading is due to multipath.",
+        "d": "Incorrect! Both impairments distort the signal, they do not merely delay it."
       },
       "correctAnswer": "b",
       "difficulty": "intermediate"
     },
     {
-      "question": "Question 2: Why does higher-order modulation (like 64-QAM) suffer more in Rayleigh fading than lower-order schemes (like BPSK)?",
+      "question": "In a Rayleigh fading channel, which underlying statistical condition is the primary cause for the high probability of 'deep fades'?",
       "answers": {
-        "a": "Because higher-order schemes require narrower bandwidths.",
-        "b": "Because symbol spacing is smaller, making them more error-prone during fades.",
-        "c": "Because they have lower average power.",
-        "d": "Because they introduce non-linearity into the channel."
+        "a": "The presence of a dominant Line-of-Sight (LoS) signal path.",
+        "b": "The zero-mean Gaussian nature of the in-phase and quadrature components.",
+        "c": "The linear decay of signal power as a function of distance.",
+        "d": "The constant phase relationship between all received multipath components."
       },
       "explanations": {
-        "a": "Incorrect! Bandwidth is not the core issue in fading.",
-        "b": "Correct! Closer constellation points mean a small fade can easily cause incorrect demodulation.",
-        "c": "Incorrect! Power is normalized; spacing is the issue.",
-        "d": "Incorrect! Modulation schemes themselves don't cause non-linearity."
+        "a": "Incorrect! A dominant LoS component leads to Rician fading, which actually *reduces* the probability and depth of signal fades.",
+        "b": "Correct! Because the in-phase and quadrature components are zero-mean Gaussian (meaning there is no dominant path), they can sum to zero at certain points, creating the deep fades characteristic of the Rayleigh distribution.",
+        "c": "Incorrect! This describes Large-Scale Path Loss, whereas deep fades are a phenomenon of Small-Scale Fading caused by multipath interference.",
+        "d": "Incorrect! Fading is caused by *randomly* varying phases; if the phases were constant, the signal strength would not fluctuate over time or space."
       },
       "correctAnswer": "b",
       "difficulty": "intermediate"
     },
     {
-      "question": "Question 3: How does a frequency-selective Rayleigh fading channel affect an OFDM system compared to a flat-fading channel?",
+      "question": "For coherent BPSK over a Rayleigh fading channel with AWGN, which technique at the receiver helps most to combat the effects of fading before demodulation?",
       "answers": {
-        "a": "All subcarriers experience equal gain and phase shifts.",
-        "b": "Some subcarriers are severely attenuated while others are not.",
-        "c": "It has no significant impact because OFDM uses cyclic prefixes.",
-        "d": "It affects the bit duration rather than the frequency response."
+        "a": "Using a matched filter without channel knowledge",
+        "b": "Applying an adaptive equalizer to reverse channel distortions",
+        "c": "Increasing the carrier frequency",
+        "d": "Adding a cyclic prefix"
       },
       "explanations": {
-        "a": "Incorrect! That describes flat fading.",
-        "b": "Correct! Frequency-selective fading leads to variation across subcarriers.",
-        "c": "Incorrect! Cyclic prefix prevents ISI but doesn't flatten the channel.",
-        "d": "Incorrect! Fading does not directly affect bit duration."
+        "a": "Incorrect! A matched filter improves SNR but cannot compensate for unknown fading.",
+        "b": "Correct! Adaptive equalization adjusts to the time-varying channel, mitigating the fading effects before BPSK demodulation.",
+        "c": "Incorrect! Changing carrier frequency does not counter fading.",
+        "d": "Incorrect! Cyclic prefixes help in OFDM systems, not in single-carrier BPSK."
       },
       "correctAnswer": "b",
       "difficulty": "intermediate"
     },
     {
-      "question": "Question 4: In a high-mobility environment with severe Doppler spread, which design aspect is most affected?",
+      "question": "In a high-mobility environment with severe Doppler spread, which design aspect is most affected?",
       "answers": {
         "a": "The peak-to-average power ratio (PAPR).",
         "b": "The carrier frequency selection.",
@@ -70,24 +70,58 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "Question 5: How does increasing diversity order affect the cumulative distribution function (CDF) of received SNR in Rayleigh fading?",
+      "question": "In a BPSK system over a Rayleigh fading channel with AWGN, what happens to the average Bit Error Rate (BER) when the average SNR increases?",
       "answers": {
-        "a": "The CDF shifts left, indicating more outage probability.",
-        "b": "The CDF becomes more linear.",
-        "c": "The tail of the CDF becomes steeper, reducing probability of deep fades.",
-        "d": "The CDF becomes uniform."
+        "a": "The average BER decreases but remains higher than in an AWGN-only channel.",
+        "b": "The average BER increases due to stronger fading effects.",
+        "c": "The average BER stays constant regardless of SNR.",
+        "d": "The average BER drops to zero immediately after a certain SNR threshold."
       },
       "explanations": {
-        "a": "Incorrect! Higher diversity reduces outage, not increases it.",
-        "b": "Incorrect! CDF doesn't become linear; it's still exponential-like.",
-        "c": "Correct! Diversity improves SNR statistics, making deep fades less likely.",
-        "d": "Incorrect! CDF cannot be uniform in fading channels."
+        "a": "Correct! Increasing SNR improves BER, but fading causes errors to remain higher than in AWGN-only channels.",
+        "b": "Incorrect! Higher SNR reduces errors; fading does not reverse this trend.",
+        "c": "Incorrect! BER is SNR-dependent; it does not remain constant.",
+        "d": "Incorrect! BER never drops to zero in fading channels; deep fades can always cause errors."
       },
-      "correctAnswer": "c",
+      "correctAnswer": "a",
       "difficulty": "intermediate"
     },
     {
-      "question": "Question 6: In a Rayleigh fading channel with AWGN, which metric most accurately predicts system reliability?",
+      "question": "Why does higher-order modulation (like 64-QAM) suffer more in Rayleigh fading than lower-order schemes (like BPSK)?",
+      "answers": {
+        "a": "Because higher-order schemes require narrower bandwidths.",
+        "b": "Because symbol spacing is smaller, making them more error-prone during fades.",
+        "c": "Because they have lower average power.",
+        "d": "Because they introduce non-linearity into the channel."
+      },
+      "explanations": {
+        "a": "Incorrect! Bandwidth is not the core issue in fading.",
+        "b": "Correct! Closer constellation points mean a small fade can easily cause incorrect demodulation.",
+        "c": "Incorrect! Power is normalized; spacing is the issue.",
+        "d": "Incorrect! Modulation schemes themselves don't cause non-linearity."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In a BPSK system over a Rayleigh fading channel with AWGN, why is the BER higher than in an AWGN-only channel for the same average SNR?",
+      "answers": {
+        "a": "Because fading causes random fluctuations in amplitude, sometimes producing deep fades where the signal is very weak.",
+        "b": "Because the transmitted signal power is lower in Rayleigh fading channels.",
+        "c": "Because BPSK cannot be demodulated in the presence of noise.",
+        "d": "Because the AWGN is multiplied by the fading coefficient, increasing its variance."
+      },
+      "explanations": {
+        "a": "Correct! Deep fades caused by Rayleigh fading occasionally reduce the received signal amplitude drastically, increasing bit errors even if average SNR is the same.",
+        "b": "Incorrect! The average transmitted power is unchanged; it's the random fading that increases BER.",
+        "c": "Incorrect! BPSK can still be demodulated; noise alone does not prevent demodulation.",
+        "d": "Incorrect! AWGN is additive and independent; fading does not increase its variance."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In a Rayleigh fading channel with AWGN, which metric most accurately predicts system reliability?",
       "answers": {
         "a": "Instantaneous received power.",
         "b": "Symbol energy to noise power spectral density ratio (Es/N0).",
@@ -101,44 +135,10 @@
         "d": "Correct! Outage probability accounts for both fading and noise over time."
       },
       "correctAnswer": "d",
-      "difficulty": "intermediate"
+      "difficulty": "advanced"
     },
     {
-      "question": "Question 7: When modeling a multipath Rayleigh fading channel, the autocorrelation function of the fading envelope depends on:",
-      "answers": {
-        "a": "Modulation index and bit rate.",
-        "b": "Doppler spread and time separation.",
-        "c": "SNR and carrier-to-noise ratio.",
-        "d": "Delay spread and antenna gain."
-      },
-      "explanations": {
-        "a": "Incorrect! These are modulation-related, not channel statistics.",
-        "b": "Correct! Doppler spread affects time correlation of fading.",
-        "c": "Incorrect! SNR affects error rates, not fading correlation.",
-        "d": "Incorrect! Delay spread affects frequency correlation, not autocorrelation over time."
-      },
-      "correctAnswer": "b",
-      "difficulty": "intermediate"
-    },
-    {
-      "question": "Question 8: In an AWGN channel, which of the following pairs offers the best tradeoff between spectral efficiency and BER?",
-      "answers": {
-        "a": "BPSK with repetition coding.",
-        "b": "64-QAM with no coding.",
-        "c": "16-QAM with convolutional coding.",
-        "d": "QPSK with zero padding."
-      },
-      "explanations": {
-        "a": "Incorrect! Repetition coding drastically reduces spectral efficiency.",
-        "b": "Incorrect! High BER at low SNR without coding.",
-        "c": "Correct! 16-QAM balances high data rate and BER reduction via coding.",
-        "d": "Incorrect! Zero padding doesn't provide error resilience."
-      },
-      "correctAnswer": "c",
-      "difficulty": "intermediate"
-    },
-    {
-      "question": "Question 9: Which assumption is violated when Rayleigh fading is modeled as stationary over long intervals?",
+      "question": "Which assumption is violated when Rayleigh fading is modeled as stationary over long intervals?",
       "answers": {
         "a": "The in-phase and quadrature components are Gaussian.",
         "b": "The fading process has a constant Doppler spectrum.",
@@ -155,7 +155,7 @@
       "difficulty": "advanced"
     },
     {
-      "question": "Question 10: Which method enables coherent detection in Rayleigh fading when the channel state is not known at the receiver?",
+      "question": "Which method enables coherent detection in Rayleigh fading when the channel state is not known at the receiver?",
       "answers": {
         "a": "Minimum Euclidean distance decoding.",
         "b": "Differential modulation (e.g., DPSK).",
