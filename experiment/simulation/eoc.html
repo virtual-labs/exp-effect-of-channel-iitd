@@ -64,15 +64,70 @@
                 </button>
               </div>
             </div>
+            <div class="flex max-lg:flex-col gap-x-12 gap-y-2 mt-4">
+              <div class="">
+                <div class="flex items-center justify-center gap-1">
+                  <label for="equalizerType" class="text-[#2c99ce] font-medium">Equalizer Type:</label>
+                  <select id="equalizerType" class="border border-black px-2 py-1 rounded-sm">
+                    <option value="zf">Zero-Forcing (ZF)</option>
+                    <option value="mmse">MMSE</option>
+                  </select>
+                </div>
+              </div>
+              <div class="">
+                <div class="flex items-center justify-center gap-1">
+                  <input type="checkbox" id="showNoEqualization" />
+                  <label for="showNoEqualization" class="text-[#2c99ce] font-medium">Also show output without equalization (ISI comparison)</label>
+                </div>
+              </div>
+              <div class="">
+                <div class="flex items-center justify-center gap-1">
+                  <label for="snrInspect" class="text-[#2c99ce] font-medium">SNR to Inspect (dB):</label>
+                  <input
+                    class="border border-black px-2 py-1 rounded-sm"
+                    type="number"
+                    id="snrInspect"
+                    name="snrInspect"
+                    value="10"
+                  />
+                </div>
+              </div>
+              <div class="flex justify-center">
+                <button
+                  class="bg-blue-500 text-white rounded-md px-2 py-1"
+                  onclick="showEqualizerOutput()"
+                >
+                  Show Equalizer Output
+                </button>
+              </div>
+            </div>
           </div>
           <canvas id="myChart" width="800" height="400"></canvas>
+          <canvas id="equalizerOutputChart" width="800" height="400" class="mt-8"></canvas>
         </div>
       </div>
     </div>
     <script>
-      let chartInstance = null;
+          // Applies the selected equalizer to a received signal, given the
+          // (perfectly known) channel taps and noise variance. ZF simply
+          // inverts the channel; MMSE additionally accounts for noise power,
+          // so it degrades more gracefully at low SNR (a common textbook
+          // comparison point students can now actually see).
+          function applyEqualizer(received_signal, h_sum, type, noise_variance) {
+              if (type === 'mmse') {
+                  const h_conj = math.conj(h_sum);
+                  const h_mag_sq = Math.pow(math.abs(h_sum), 2);
+                  const weight = math.divide(h_conj, h_mag_sq + noise_variance);
+                  return received_signal.map(val => math.multiply(val, weight));
+              }
+              // Zero-forcing (default): assumes perfect CSI, ignores noise.
+              return received_signal.map(val => math.divide(val, h_sum));
+          }
 
-      function plotMSE() {
+          let chartInstance = null;
+          let equalizerOutputChartInstance = null;
+
+          function plotMSE() {
           // Get input values
           const distance = parseFloat(document.getElementById('distance').value);
           const num_multipaths = parseInt(document.getElementById('num_multipaths').value);
@@ -88,7 +143,10 @@
           const modulated_data = data.map(bit => 2 * bit - 1);
 
           // Initialize array to store results
+          const equalizerType = document.getElementById('equalizerType').value;
+          const showNoEqualization = document.getElementById('showNoEqualization').checked;
           let MSE = Array(SNR_dB.length).fill(0);
+          let MSE_noEq = Array(SNR_dB.length).fill(0);
 
           // Helper function to generate a normally distributed random number using Box-Muller transform
           function randomNormal(mean = 0, stddev = 1) {
@@ -120,9 +178,9 @@
               const noise = Array.from({ length: num_samples }, () => complexGaussian(0, Math.sqrt(noise_variance / 2)));
               const received_signal = faded_signal.map((val, idx) => math.add(val, noise[idx]));
 
-              // Equalization (assuming perfect CSI for simplicity)
+              // Equalization -- type selected by the user (ZF or MMSE)
               const h_sum = h.reduce((acc, val) => math.add(acc, val), math.complex(0, 0));
-              const equalized_signal = received_signal.map(val => math.divide(val, h_sum));
+              const equalized_signal = applyEqualizer(received_signal, h_sum, equalizerType, noise_variance);
 
               // Demodulation
               const demodulated_data = equalized_signal.map(val => math.re(val) > 0 ? 1 : 0);
@@ -130,6 +188,14 @@
               // Calculate MSE
               const error = modulated_data.map((val, idx) => val - math.re(equalized_signal[idx]));
               MSE[k] = math.mean(error.map(val => Math.pow(Math.abs(val), 2)));
+
+              // Optionally, MSE with NO equalization at all -- demodulating
+              // the raw received signal directly. This is what illustrates
+              // the ISI problem the equalizer exists to correct.
+              if (showNoEqualization) {
+                  const error_noEq = modulated_data.map((val, idx) => val - math.re(received_signal[idx]));
+                  MSE_noEq[k] = math.mean(error_noEq.map(val => Math.pow(Math.abs(val), 2)));
+              }
           }
 
           // Destroy previous chart if it exists
@@ -138,17 +204,28 @@
           }
 
           // Plot MSE vs SNR
+          const equalizerLabel = equalizerType === 'mmse' ? 'MMSE' : 'Zero-Forcing (ZF)';
+          const datasets = [{
+              label: 'MSE with ' + equalizerLabel + ' equalization',
+              data: MSE,
+              borderColor: 'blue',
+              fill: false
+          }];
+          if (showNoEqualization) {
+              datasets.push({
+                  label: 'MSE with NO equalization (ISI uncorrected)',
+                  data: MSE_noEq,
+                  borderColor: 'red',
+                  fill: false
+              });
+          }
+
           const ctx = document.getElementById('myChart').getContext('2d');
           chartInstance = new Chart(ctx, {
               type: 'line',
               data: {
                   labels: SNR_dB,
-                  datasets: [{
-                      label: 'Mean Square Error (MSE)',
-                      data: MSE,
-                      borderColor: 'blue',
-                      fill: false
-                  }]
+                  datasets: datasets
               },
               options: {
                   scales: {
@@ -173,6 +250,97 @@
                   }
               }
           });
+      }
+
+      // Shows the actual equalizer output at one chosen SNR -- not just an
+      // aggregate error metric. This is what makes equalization concrete:
+      // you can see the received symbols scattered by fading + noise, then
+      // pulled back toward +-1 by the equalizer. With "no equalization"
+      // checked, the uncorrected symbols are shown alongside for contrast.
+      function showEqualizerOutput() {
+          const num_multipaths = parseInt(document.getElementById('num_multipaths').value);
+          const equalizerType = document.getElementById('equalizerType').value;
+          const showNoEqualization = document.getElementById('showNoEqualization').checked;
+          const snrInspect = parseFloat(document.getElementById('snrInspect').value);
+          const num_display_samples = 60;
+
+          function randomNormal(mean = 0, stddev = 1) {
+              let u = 0, v = 0;
+              while (u === 0) u = Math.random();
+              while (v === 0) v = Math.random();
+              return mean + stddev * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+          }
+          function complexGaussian(mean = 0, stddev = 1) {
+              return math.complex(randomNormal(mean, stddev), randomNormal(mean, stddev));
+          }
+
+          const data = Array.from({ length: num_display_samples }, () => Math.round(Math.random()));
+          const modulated_data = data.map(bit => 2 * bit - 1);
+
+          const SNR_linear = Math.pow(10, snrInspect / 10);
+          const noise_variance = 1 / SNR_linear;
+
+          let h = Array.from({ length: num_multipaths }, () => complexGaussian(0, 1 / Math.sqrt(2)));
+          let faded_signal = Array(num_display_samples).fill(math.complex(0, 0));
+          for (let i = 0; i < num_multipaths; i++) {
+              faded_signal = faded_signal.map((val, idx) => math.add(val, math.multiply(h[i], modulated_data[idx])));
+          }
+          const noise = Array.from({ length: num_display_samples }, () => complexGaussian(0, Math.sqrt(noise_variance / 2)));
+          const received_signal = faded_signal.map((val, idx) => math.add(val, noise[idx]));
+
+          const h_sum = h.reduce((acc, val) => math.add(acc, val), math.complex(0, 0));
+          const equalized_signal = applyEqualizer(received_signal, h_sum, equalizerType, noise_variance);
+
+          const equalizerLabel = equalizerType === 'mmse' ? 'MMSE' : 'Zero-Forcing (ZF)';
+          const sampleIndex = Array.from({ length: num_display_samples }, (_, i) => i);
+          const datasets = [
+              {
+                  label: 'Equalizer output (' + equalizerLabel + ')',
+                  data: equalized_signal.map(val => math.re(val)),
+                  borderColor: 'green',
+                  fill: false,
+                  pointRadius: 3
+              },
+              {
+                  label: 'Transmitted symbols (\u00b11, ideal)',
+                  data: modulated_data,
+                  borderColor: 'gray',
+                  borderDash: [4, 4],
+                  fill: false,
+                  pointRadius: 0
+              }
+          ];
+          if (showNoEqualization) {
+              datasets.push({
+                  label: 'Received signal, NO equalization (ISI + fading visible)',
+                  data: received_signal.map(val => math.re(val)),
+                  borderColor: 'red',
+                  fill: false,
+                  pointRadius: 3
+              });
+          }
+
+          if (equalizerOutputChartInstance) {
+              equalizerOutputChartInstance.destroy();
+          }
+          const ctx2 = document.getElementById('equalizerOutputChart').getContext('2d');
+          equalizerOutputChartInstance = new Chart(ctx2, {
+              type: 'line',
+              data: { labels: sampleIndex, datasets: datasets },
+              options: {
+                  scales: {
+                      x: { title: { display: true, text: 'Symbol index' } },
+                      y: { title: { display: true, text: 'Amplitude (real part)' } }
+                  },
+                  plugins: {
+                      title: {
+                          display: true,
+                          text: 'Equalizer Output at SNR = ' + snrInspect + ' dB'
+                      }
+                  }
+              }
+          });
+          document.getElementById('equalizerOutputChart').scrollIntoView({ behavior: 'smooth' });
       }
     </script>
   </body>
