@@ -1,0 +1,175 @@
+{
+  "version": 2.1,
+  "questions": [
+    {
+      "question": "Which mathematical distribution best models the amplitude of a received signal in a Rayleigh fading environment without a line-of-sight (LoS) path?",
+      "answers": {
+        "a": "Gaussian distribution",
+        "b": "Rayleigh distribution",
+        "c": "Rician distribution",
+        "d": "Poisson distribution"
+      },
+      "explanations": {
+        "a": "Incorrect! Gaussian models the in-phase and quadrature components, not the amplitude.",
+        "b": "Correct! The Rayleigh distribution models the magnitude of a non-LoS multipath signal.",
+        "c": "Incorrect! Rician is used when a dominant LoS component is present.",
+        "d": "Incorrect! Poisson distribution is not relevant for modeling signal amplitude in fading channels."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In a Rayleigh fading channel, which of the following strategies best mitigates deep fades without increasing transmit power?",
+      "answers": {
+        "a": "Switching to high-order QAM.",
+        "b": "Implementing time diversity techniques.",
+        "c": "Reducing symbol rate.",
+        "d": "Using narrowband signals."
+      },
+      "explanations": {
+        "a": "Incorrect! High-order QAM is more susceptible to fading, not a mitigation.",
+        "b": "Correct! Time diversity, such as interleaving and retransmission, spreads the signal over time to combat deep fades.",
+        "c": "Incorrect! Reducing symbol rate does not specifically mitigate fading.",
+        "d": "Incorrect! Narrowband signals are more affected by fading due to less frequency diversity."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "When AWGN is added to a Rayleigh fading channel, what combined impact does it have on BER performance?",
+      "answers": {
+        "a": "It significantly improves BER performance.",
+        "b": "It results in a double-logarithmic BER increase.",
+        "c": "It causes a rapid BER degradation, especially at low SNR.",
+        "d": "It has negligible effect due to fading dominating."
+      },
+      "explanations": {
+        "a": "Incorrect! Noise does not improve BER.",
+        "b": "Incorrect! BER degradation is not double-logarithmic in typical fading scenarios.",
+        "c": "Correct! The combination of fading and AWGN leads to steep BER degradation at low SNR.",
+        "d": "Incorrect! AWGN contributes significantly to performance loss along with fading."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "How does the choice of modulation scheme affect the robustness of a signal in a Rayleigh fading channel with AWGN?",
+      "answers": {
+        "a": "High-order modulation always improves robustness.",
+        "b": "Lower-order modulation is generally more robust against fading and noise.",
+        "c": "Modulation does not affect performance in fading channels.",
+        "d": "Only analog modulation is robust against fading."
+      },
+      "explanations": {
+        "a": "Incorrect! High-order modulation is more susceptible to fading and noise.",
+        "b": "Correct! Lower-order schemes like BPSK or QPSK have larger symbol spacing, making them less error-prone in fading and noisy channels.",
+        "c": "Incorrect! Modulation significantly affects error performance under fading and noise.",
+        "d": "Incorrect! Analog modulation is not inherently more robust than digital schemes in fading channels."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In a wireless system experiencing Rayleigh fading and AWGN, which modulation scheme is generally more robust to deep fades without increasing transmit power?",
+      "answers": {
+        "a": "High-order QAM (e.g., 64-QAM)",
+        "b": "Binary Phase Shift Keying (BPSK)",
+        "c": "16-PSK",
+        "d": "Analog Amplitude Modulation (AM)"
+      },
+      "explanations": {
+        "a": "Incorrect! High-order QAM is more susceptible to fading and noise due to smaller symbol spacing.",
+        "b": "Correct! BPSK has the largest Euclidean distance between symbols, making it more robust to fading and AWGN without extra transmit power.",
+        "c": "Incorrect! 16-PSK is less robust than BPSK due to closer symbol spacing and higher sensitivity to phase errors.",
+        "d": "Incorrect! Analog AM is highly susceptible to fading and noise; digital schemes like BPSK are preferred for robustness."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In digital communication systems, why is equalization essential when transmitting through a Rayleigh fading channel with AWGN?",
+      "answers": {
+        "a": "It increases the transmitted signal power to overcome fading.",
+        "b": "It compensates for channel-induced distortions and intersymbol interference.",
+        "c": "It converts AWGN into a deterministic signal for easier demodulation.",
+        "d": "It changes the modulation scheme to avoid fading effects."
+      },
+      "explanations": {
+        "a": "Incorrect! Equalization does not increase transmit power; it works at the receiver.",
+        "b": "Correct! Equalizers reverse the effects of multipath fading and restore signal shape, mitigating ISI caused by the channel.",
+        "c": "Incorrect! AWGN is random; equalization cannot convert it to a deterministic signal.",
+        "d": "Incorrect! Equalization does not modify the modulation scheme; it corrects channel distortions."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Under a Rayleigh fading model, how does the instantaneous SNR relate to the average SNR?",
+      "answers": {
+        "a": "Always equal",
+        "b": "Always greater than average",
+        "c": "Always less than average",
+        "d": "Fluctuates around the average"
+      },
+      "explanations": {
+        "a": "Incorrect! Instantaneous SNR varies due to fading.",
+        "b": "Incorrect! Instantaneous SNR is sometimes greater but not always.",
+        "c": "Incorrect! Instantaneous SNR can also be above average at times.",
+        "d": "Correct! Due to the stochastic nature of fading, instantaneous SNR fluctuates around the average SNR."
+      },
+      "correctAnswer": "d",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "How does the Doppler shift influence Rayleigh fading in mobile wireless scenarios?",
+      "answers": {
+        "a": "It reduces the fading depth.",
+        "b": "It causes time-selective fading patterns.",
+        "c": "It increases SNR consistently.",
+        "d": "It converts Rayleigh fading to Rician fading."
+      },
+      "explanations": {
+        "a": "Incorrect! Doppler shift does not reduce fading depth.",
+        "b": "Correct! Doppler shift introduces rapid temporal variations in channel coefficients, causing time-selective fading.",
+        "c": "Incorrect! SNR may fluctuate but does not increase consistently.",
+        "d": "Incorrect! Fading type depends on LoS presence, not Doppler shift."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Why does Rayleigh fading typically result in higher BER compared to AWGN-only channels at the same average SNR?",
+      "answers": {
+        "a": "Because the channel bandwidth is lower.",
+        "b": "Because fading introduces deep nulls where signal amplitude can drop drastically.",
+        "c": "Because Rayleigh fading channels are always non-linear.",
+        "d": "Because phase distortion is completely absent."
+      },
+      "explanations": {
+        "a": "Incorrect! Bandwidth is not necessarily lower in fading channels.",
+        "b": "Correct! Deep fades can temporarily reduce signal power close to zero, increasing BER even at the same average SNR.",
+        "c": "Incorrect! Rayleigh fading channels are linear but time-varying.",
+        "d": "Incorrect! Phase distortion may exist and is not absent."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In a digital communication system affected by Rayleigh fading and AWGN, which receiver technique primarily helps recover the transmitted signal accurately?",
+      "answers": {
+        "a": "Increasing carrier frequency",
+        "b": "Using an adaptive equalizer",
+        "c": "Reducing the message signal amplitude",
+        "d": "Switching to analog transmission"
+      },
+      "explanations": {
+        "a": "Incorrect! Changing carrier frequency does not compensate for fading or noise.",
+        "b": "Correct! Adaptive equalizers adjust to channel variations in real time, mitigating fading and intersymbol interference to recover the signal accurately.",
+        "c": "Incorrect! Reducing signal amplitude makes reception worse under noise and fading.",
+        "d": "Incorrect! Switching to analog does not improve robustness against fading and AWGN."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    }
+  ]
+}
