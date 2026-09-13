@@ -4,9 +4,14 @@
       <p class="mb-4">
         Understanding the digital communication process involves several key stages. Each stage is crucial for ensuring that the message signal is transmitted effectively and accurately. Below is a detailed overview of each stage in the process:
       </p>
+      <div align="center">
+        <img src="./channel_scheme.png" alt="System block diagram: message signal through modulator, channel, equalizer, and demodulator" width="760" />
+        <br/>
+        <strong>Fig 1: System block diagram showing the full pipeline covered in this experiment</strong>
+      </div>
       <h3>1. Message Signal:</h3>
       <p class="mb-4">
-        This is the original data or information that needs to be transmitted from the sender to the receiver. It can be in the form of text, audio, video, or any other type of data. The message signal, denoted as <strong>x(t)</strong>, is the input to the communication system, representing the content that the sender wants to convey. For digital systems, this often means a sequence of binary bits (0s and 1s).
+        This is the original data or information that needs to be transmitted from the sender to the receiver. It can be in the form of text, audio, video, or any other type of data. The message signal, denoted as <strong>m(t)</strong>, is the input to the communication system, representing the content that the sender wants to convey. For digital systems, this often means a sequence of binary bits (0s and 1s).
       </p>
       <h3>2. Modulation:</h3>
       <p class="mb-4">
@@ -47,6 +52,8 @@
           <li><b>h(t)</b> represents the channel's fading effects.</li>
           <li><b>n(t)</b> represents the Additive White Gaussian Noise (AWGN).</li>
         </ul>
+        <br />
+        <em>Note: the accompanying simulation implements the channel as a discrete sum of <b>N</b> complex multipath gains, <b>h = Σ<sub>i</sub> h<sub>i</sub></b>, rather than a continuous impulse response -- this discrete <b>h</b> plays the same role as <b>h(t)</b> above, scaling the transmitted signal before noise is added.</em>
         <br />
         Let's look at the components of the channel more closely:
       </p>
