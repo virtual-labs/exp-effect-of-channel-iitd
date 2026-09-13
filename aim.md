@@ -1,0 +1,1 @@
+**To analyze the impact of Rayleigh Fading (due to multi-path) and AWGN on the performance of different modulation schemes. This includes examining multipath interference and its influence on signal and bit error rates (BER).**
